@@ -4,12 +4,12 @@ import enum
 import json
 import time
 
-robot = Dorna("/home/pi/Desktop/config.yaml")
+#robot = Dorna("/home/pi/Desktop/config.yaml")
 """=======================
     DEFINE CONST
     ======================
 """
-COORDINATE = ["x","y","z"]
+COORDINATE = ["x","y","z","a","b"]
 JOINTS     = ["j0","j1","j2","j3","j4"]
 PRM_TEMPLATE ={'path':'joint','movement':1}
 
@@ -37,7 +37,7 @@ class Direction(enum.Enum):
     DOWN = '-z'
 class Arm(object):
     def __init__(self):
-        self.robot =  Dorna("/home/pi/Desktop/config.yaml")
+        self.robot =  Dorna("./config.yaml")
         
     def go(self,position=HOME):
         print("Go to ",position)
@@ -50,7 +50,8 @@ class Arm(object):
     """
     def connect(self):
         return self.robot.connect()
-    
+    def dis(self):
+        return self.robot.disconnect()
     def connectAndHomeIfneed(self):
         
         self.robot.connect()
@@ -80,7 +81,12 @@ class Arm(object):
                 print(key," is homed")
             else:
                 print(key," is not homed yet")
-    
+    def homes(self):
+        self.robot.home("j0")
+        self.robot.home("j1")
+        self.robot.home("j2")
+        self.robot.home("j3")  
+        
     def homeIfneed(self):
         if not self.isConnected():
             print("Robot is not connected")
@@ -213,7 +219,8 @@ class Arm(object):
             self.adjustAxis('y',value)
         if direct == Direction.RIGHT:
             self.adjustAxis('y',value * -1)
-     """==================================================
+            
+    """==================================================
         MOVE move to a coordiation
         ex:moveTo((1,2,6)) x=1,y=2,z6
         =================================================
@@ -239,7 +246,44 @@ class Arm(object):
         self.adjust('j0',-180)
         self.adjustCoordinate({'x':15,'y':0,'z':3.5},False)
         self.wait(10)
-        self.go()    
+        self.go()
+        
+        
+    def preHit(self):
+        self.adjustJoints({'j0':0,'j1':45,'j2':-123,'j3':78,'j4':0},False)
+        self.adjustCoordinate({'x':-10,'y':0,'z':0})
+        self.adjustCoordinate({'x':60,'y':0,'z':0})
+    def hit(self):
+        self.adjustCoordinate({'x':1,'y':0,'z':0})
+        for i in [0,1,2,3,4]:
+            self.adjustCoordinate({'x':-60,'y':0,'z':0})
+            self.adjustCoordinate({'x':60,'y':0,'z':0})
+            self.wait(10)
+            self.adjustCoordinate({'x':-10,'y':0,'z':0})
+
+        self.adjustCoordinate({'x':-10,'y':0,'z':0})
+    def preHitTop(self):
+        self.adjustJoints({'j0':0,'j1':45,'j2':-123,'j3':78,'j4':0},False)
+        self.adjustCoordinate({'x':0,'y':0,'z':80})
+        self.adjustCoordinate({'x':80,'y':0,'z':0,'a':-90})
+        self.adjustCoordinate({'x':0,'y':0,'z':14})
+    def hitTop(self):
+        self.adjustCoordinate({'x':0,'y':0,'z':-1})
+        for i in [0,1,2,3,4]:
+            self.adjustCoordinate({'x':0,'y':0,'z':20})
+            self.adjustCoordinate({'x':0,'y':0,'z':-20})
+            self.wait(6);
+        
+    def prRight(self):
+        self.adjustJoints({'j0':0,'j1':45,'j2':-123,'j3':78,'j4':0},False)
+        
+    def hitRight(self):
+        self.adjustCoordinate({'x':0,'y':1,'z':0})
+        for i in [0,1,2,3,4]:
+            self.adjustCoordinate({'x':0,'y':-20,'z':0})
+            self.adjustCoordinate({'x':0,'y':20,'z':0})
+            self.wait(6);   
+           
         
         
         

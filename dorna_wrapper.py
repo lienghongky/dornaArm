@@ -11,7 +11,7 @@ import configparser
 
 class pose:
 
-    def __init__(self,position,description):
+    def __init__(self,space=arm.SPACE_JOINT,position,description):
 
         """
         CLASS DEFINING A POSE IN JOINT SPACE
@@ -20,8 +20,9 @@ class pose:
         Description is a human-readable description of the pose.
         """
 
-        # TODO add type info (joint or xyz) and any other decriptors.
+        # TODO add type info (joint or xyz) and any other descriptors.
 
+        self.space=space # 'joint' space or 'xyz' space 
         self.position=position
         self.description=description
 
@@ -36,7 +37,6 @@ class arm:
 
     # Utility constants
 
-    WORKING_DIRECTORY = os.getcwd()
     DEFAULT_CONFIG = "./config.yaml"
 
     DEFAULT_SPEED = 1000
@@ -44,14 +44,20 @@ class arm:
     ABSOLUTE = 0
     RELATIVE = 1
 
+    SPACE_JOINT = 'joint'
+    SPACE_XYZ = 'xyz'
+
+    PATH_JOINT = 'joint'
+    PATH_LINE = 'line'
+
     # Utility lists
 
     JOINTS = ['j0','j1','j2','j3','j4']
 
     # Utility poses
 
-    HOME_POSE = pose([0,135,-90,-45,0],"the HOME (resting) position")
-    FLAT_POSE = pose([0,0,0,0,0],"the FLAT (outstretched) position")
+    HOME_POSE = pose(SPACE_JOINT,[0,135,-90,-45,0],"the HOME (resting) position")
+    FLAT_POSE = pose(SPACE_JOINT,[0,0,0,0,0],"the FLAT (outstretched) position")
     
     # Initialisation
 
@@ -67,6 +73,8 @@ class arm:
         # Attempt to load a Dorna object with a configuration file, default to the desktop config if none is entered manually.
 
         config = config if config!= None else self.DEFAULT_CONFIG
+
+        self.WORKING_DIRECTORY = os.getcwd()
 
         try:
             self.robot=Dorna(config)
@@ -139,4 +147,8 @@ class arm:
             jointspaceDictionary[joint]=pose.position[index]
 
         return {"command":"move","prm":jointspaceDictionary}
+
+    # Position feedback XYZ and JOINT
+
+    # Adjustment function
 

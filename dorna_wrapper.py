@@ -3,6 +3,8 @@ from dorna import Dorna
 import time
 import datetime
 
+import json
+
 import sys
 import os
 import platform
@@ -11,7 +13,7 @@ import configparser
 
 class pose:
 
-    def __init__(self,space=arm.SPACE_JOINT,position,description):
+    def __init__(self,position,description,space='joint'):
 
         """
         CLASS DEFINING A POSE IN JOINT SPACE
@@ -56,9 +58,9 @@ class arm:
 
     # Utility poses
 
-    HOME_POSE = pose(SPACE_JOINT,[0,135,-90,-45,0],"the HOME (resting) position")
-    FLAT_POSE = pose(SPACE_JOINT,[0,0,0,0,0],"the FLAT (outstretched) position")
-    STANDING_POSE = pose(SPACE_JOINT,[90,0,0,0,0],"the STANDING (vertical) position")
+    HOME_POSE = pose([0,135,-90,-45,0],"the HOME (resting) position",SPACE_JOINT)
+    FLAT_POSE = pose([0,0,0,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
+    STANDING_POSE = pose([0,90,0,0,0],"the STANDING (vertical) position",SPACE_JOINT)
     
     # Initialisation
 
@@ -94,7 +96,11 @@ class arm:
             return 0
 
         # This function either exits with a live arm reporting device status, or fails with 0 and advises the user.
-
+    
+    def kill(self):
+        self.robot.disconnect()
+        self.robot.terminate()
+    
     def home(self):
 
         """
@@ -165,7 +171,7 @@ class arm:
         RETURN ON COMPLETION OF THE CURRENT TASK QUEUE
         """
 
-        while(self.robot.device()['state']!=0):
+        while(json.loads(self.robot.device())['state']!=0):
             time.sleep(0.1)
             continue
 

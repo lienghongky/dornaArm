@@ -17,5 +17,9 @@ testArm.goToPose(arm.HOME_POSE)
 
 print(testArm.getPosition())
 
-print("Completed Test Run")
+print("Completed Test Run, killing the connection")
+
+testArm.kill()
+
+print("killed")
 

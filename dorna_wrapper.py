@@ -39,7 +39,7 @@ class arm:
 
     DEFAULT_CONFIG = "./config.yaml"
 
-    DEFAULT_SPEED = 1000
+    DEFAULT_SPEED = 6000
 
     ABSOLUTE = 0
     RELATIVE = 1
@@ -58,6 +58,7 @@ class arm:
 
     HOME_POSE = pose(SPACE_JOINT,[0,135,-90,-45,0],"the HOME (resting) position")
     FLAT_POSE = pose(SPACE_JOINT,[0,0,0,0,0],"the FLAT (outstretched) position")
+    STANDING_POSE = pose(SPACE_JOINT,[90,0,0,0,0],"the STANDING (vertical) position")
     
     # Initialisation
 
@@ -87,6 +88,7 @@ class arm:
 
         try:
             self.robot.connect()
+            print("Connected to robot")
         except:
             print("Connection failed, please re-instantiate the arm object with a valid port.")
             return 0
@@ -130,6 +132,7 @@ class arm:
 
         print("Moving to {}".format(pose.description))
         self.robot.play(self.getMovementCommand(pose,speed=speed))
+        self.waitForCompletion()
         print("Completed move")
 
     def getMovementCommand(self,pose,space='joint',movement=ABSOLUTE,speed=DEFAULT_SPEED):
@@ -148,7 +151,25 @@ class arm:
 
         return {"command":"move","prm":jointspaceDictionary}
 
-    # Position feedback XYZ and JOINT
+    def getPosition(self,space=SPACE_JOINT):
 
-    # Adjustment function
+        """
+        RETURN THE CURRENT POSITION OF THE ARM IN THE SPECIFIED SPACE
+        """
 
+        return self.robot.position(space)
+
+    def waitForCompletion(self):
+
+        """
+        RETURN ON COMPLETION OF THE CURRENT TASK QUEUE
+        """
+
+        while(self.robot.device()['state']!=0):
+            time.sleep(0.1)
+            continue
+
+        return
+
+    # TODO Adjustment function
+    

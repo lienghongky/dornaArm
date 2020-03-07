@@ -39,7 +39,7 @@ class arm:
     WORKING_DIRECTORY = os.getcwd()
     DEFAULT_CONFIG = "./config.yaml"
 
-    DEFAULT_SPEED = 4000
+    DEFAULT_SPEED = 1000
 
     ABSOLUTE = 0
     RELATIVE = 1
@@ -52,8 +52,6 @@ class arm:
 
     HOME_POSE = pose([0,135,-90,-45,0],"the HOME (resting) position")
     FLAT_POSE = pose([0,0,0,0,0],"the FLAT (outstretched) position")
-    STAND_POSE = pose([0,90,0,0,0], "the STAND (vertical standing) position")
-    
     
     # Initialisation
 
@@ -81,7 +79,6 @@ class arm:
 
         try:
             self.robot.connect()
-            print("Connected to robot")
         except:
             print("Connection failed, please re-instantiate the arm object with a valid port.")
             return 0
@@ -110,7 +107,6 @@ class arm:
             self.robot.home(joint)
 
         print("Homed all joints")
-        print(self.robot.homed())
 
         self.goToPose(self.HOME_POSE)
 
@@ -126,6 +122,7 @@ class arm:
 
         print("Moving to {}".format(pose.description))
         self.robot.play(self.getMovementCommand(pose,speed=speed))
+        print("Completed move")
 
     def getMovementCommand(self,pose,space='joint',movement=ABSOLUTE,speed=DEFAULT_SPEED):
 

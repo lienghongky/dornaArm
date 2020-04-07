@@ -12,6 +12,11 @@ import platform
 import configparser
 
 class pose:
+    PATH_JOINT = 'joint'
+    PATH_LINE = 'line'
+
+    SPACE_JOINT = 'joint'
+    SPACE_XYZ = 'xyz'
 
     def __init__(self,position,description,space='joint'):
 
@@ -23,10 +28,11 @@ class pose:
         """
 
         # TODO add type info (joint or xyz) and any other descriptors.
-
+        
         self.space=space # 'joint' space or 'xyz' space 
         self.position=position
         self.description=description
+        self.path = self.PATH_JOINT if space == self.SPACE_JOINT else self.PATH_LINE
 
 class arm:
 
@@ -55,6 +61,7 @@ class arm:
     # Utility lists
 
     JOINTS = ['j0','j1','j2','j3','j4']
+    AXISES = ['x','y','z','a','b']
 
     # Utility poses
 
@@ -141,7 +148,7 @@ class arm:
         self.waitForCompletion()
         print("Completed move")
 
-    def getMovementCommand(self,pose,space='joint',movement=ABSOLUTE,speed=DEFAULT_SPEED):
+    def getMovementCommand(self,pose,movement=ABSOLUTE,speed=DEFAULT_SPEED):
 
         """
         CREATE A SINGLE MOVEMENT COMMAND DICTIONARY FOR USE WITH OTHER FUNCTIONS.
@@ -149,13 +156,18 @@ class arm:
         Returns a single movement command in the format required for robot native play function.
         """
 
-        # TODO fix for all movement types
+        # TODO fix for all movement types //DONE
 
-        jointspaceDictionary={'path':space,'movement':movement, 'speed':speed}
-        for index, joint in enumerate(self.JOINTS):
-            jointspaceDictionary[joint]=pose.position[index]
+        spaceDictionary={'path':pose.path,'movement':movement, 'speed':speed}
+        if (pose.space == self.SPACE_JOINT):
+            for index, joint in enumerate(self.JOINTS):
+                spaceDictionary[joint]=pose.position[index]
+        elif (pose.space == self.SPACE_XYZ):
+            for index, axis in enumerate(self.AXISES):
+                spaceDictionary[axis]=pose.position[index]
 
-        return {"command":"move","prm":jointspaceDictionary}
+
+        return {"command":"move","prm":spaceDictionary}
 
     def getPosition(self,space=SPACE_JOINT):
 

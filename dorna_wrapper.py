@@ -76,7 +76,7 @@ class arm:
     HOME_POSE = pose([0,135,-90,-45,0],"the HOME (resting) position",SPACE_JOINT)
     FLAT_POSE = pose([0,0,0,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
     STANDING_POSE = pose([0,90,0,0,0],"the STANDING (vertical) position",SPACE_JOINT)
-    J04_CONFIG_POSE = pose([0,15,-105,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
+    J04_CONFIG_POSE = pose([0,15,-100,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
     # Initialisation
 
     def __init__(self,port=None,config=None):

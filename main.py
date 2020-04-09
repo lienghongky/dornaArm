@@ -75,7 +75,7 @@ class Arm(object):
             print("Robot is not connected")
             return False
             
-        homed = json.loads(self.robot.homed())
+        homed = c
         for key in homed:
             if homed[key] == 1:
                 print(key," is homed")

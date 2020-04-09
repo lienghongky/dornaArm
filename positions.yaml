@@ -1,0 +1,63 @@
+- description: touch standing bar
+  name: kiss tools bar
+  position:
+  - -120
+  - 40
+  - -40
+  - 0.0
+  - 50.0
+  space: joint
+- description: touch standing bar at j0 = 0
+  name: picking
+  position:
+  - 0
+  - 15
+  - -100
+  - 0
+  - 66
+  space: joint
+- description: lower part of standing bar
+  name: lowerBar
+  position:
+  - -119
+  - 5
+  - -51
+  - 45.0
+  - 50.0
+  space: joint
+- description: na
+  name: na
+  position:
+  - -119
+  - 5
+  - -51
+  - 45.0
+  - 50.0
+  space: joint
+- description: aa
+  name: aa
+  position:
+  - null
+  - null
+  - null
+  - null
+  - null
+  space: a
+- description: a
+  name: a
+  position:
+  - -119
+  - 5
+  - -51
+  - 45.0
+  - 50.0
+  space: joint
+- description: sl
+  name: lasfd
+  position:
+  - -119
+  - 5
+  - -51
+  - 45.0
+  - 50.0
+  space: joint

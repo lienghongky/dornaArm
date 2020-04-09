@@ -8,40 +8,13 @@ import json
 import sys
 import os
 import platform
-import enum
+
 import configparser
 
-class Direction(enum.Enum):
-    FORWARD = 'x'
-    BACKWARD = '-x'
-    RIGHT = 'y'
-    LEFT = '-y'
-    UP = 'z'
-    DOWN = '-z'
-class pose:
-    PATH_JOINT = 'joint'
-    PATH_LINE = 'line'
+from PositionStore import *
 
-    SPACE_JOINT = 'joint'
-    SPACE_XYZ = 'xyz'
 
-    def __init__(self,position,description,space='joint'):
-
-        """
-        CLASS DEFINING A POSE IN JOINT SPACE
-
-        Position is a list of the joint positions in this pose.
-        Description is a human-readable description of the pose.
-        """
-
-        # TODO add type info (joint or xyz) and any other descriptors.
-        
-        self.space=space # 'joint' space or 'xyz' space 
-        self.position=position
-        self.description=description
-        self.path = self.PATH_JOINT if space == self.SPACE_JOINT else self.PATH_LINE
-
-class arm:
+class Arm:
 
     """
     WRAPPER CLASS FOR A SINGLE DORNA ARM.
@@ -72,11 +45,12 @@ class arm:
     PRM_TEMPLATE ={'path':'joint','movement':1}
 
     # Utility poses
+    positionStore = PositionStore()
 
-    HOME_POSE = pose([0,135,-90,-45,0],"the HOME (resting) position",SPACE_JOINT)
-    FLAT_POSE = pose([0,0,0,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
-    STANDING_POSE = pose([0,90,0,0,0],"the STANDING (vertical) position",SPACE_JOINT)
-    J04_CONFIG_POSE = pose([0,15,-100,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
+    HOME_POSE = Position('home',[0,135,-90,-45,0],"the HOME (resting) position",SPACE_JOINT)
+    FLAT_POSE = Position('flat',[0,0,0,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
+    STANDING_POSE = Position('standing',[0,90,0,0,0],"the STANDING (vertical) position",SPACE_JOINT)
+    J04_CONFIG_POSE = Position('j04',[0,15,-100,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
     # Initialisation
 
     def __init__(self,port=None,config=None):
@@ -196,7 +170,33 @@ class arm:
             continue
 
         return
-
+    
+    #Saving positon
+    def showAllPositions(self):
+        self.positionStore.showAllPositions()
+        
+    def saveCurrentPosition(self,name,description,space="joint"):
+        currentPosition = json.loads(self.robot.position(space))
+        self.positionStore.save(name,
+                                currentPosition,
+                                description,
+                                space)
+        
+    def deletePosition(self,name):
+        self.positionStore.delete(name)
+        
+    def updatePosition(self,name,position,description,space):
+        self.positionStore.update(name,
+                                  position=position,
+                                  description=description,
+                                  space=space)
+                                  
+    def goToPositionName(self,name):
+        pos = self.positionStore.getPostion(name)
+        if pos != None:
+            self.goToPose(pos)
+        else:
+            print(name," Position not Found")
     # TODO Adjustment function
  
     def setJ04Zero(self):
@@ -258,9 +258,9 @@ class arm:
     def adjustJoints(self,joints,relatively=True):
         # creates a position-movement description that can be fed to go().
         tempPath=deepcopy(self.PRM_TEMPLATE)
-        print(joints)
+        
         for key in joints:
-            for validJoint in JOINTS:
+            for validJoint in self.JOINTS:
                 if key == validJoint:
                     tempPath[validJoint]=joints[key]
                 

@@ -1,6 +1,7 @@
 from pynput.keyboard import Key,KeyCode, Listener
 from dorna_wrapper import *
 import json
+import keyboard
 
 rate = 1
 arm = Arm()

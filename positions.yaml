@@ -25,39 +25,84 @@
   - 45.0
   - 50.0
   space: joint
-- description: na
-  name: na
+- description: similar to home pose but with specifi joints
+  name: prePowerDown
   position:
-  - -119
-  - 5
-  - -51
-  - 45.0
-  - 50.0
+  - 0
+  - 145
+  - -90
+  - 30.0
+  - 0.0
   space: joint
-- description: aa
-  name: aa
+- description: flat full extended
+  name: flat
   position:
-  - null
-  - null
-  - null
-  - null
-  - null
-  space: a
-- description: a
-  name: a
-  position:
-  - -119
-  - 5
-  - -51
-  - 45.0
-  - 50.0
+  - 0
+  - 0
+  - 0
+  - 0.0
+  - 0.0
   space: joint
-- description: sl
-  name: lasfd
+- description: very close to bar
+  name: pickingClose
   position:
-  - -119
-  - 5
-  - -51
-  - 45.0
-  - 50.0
+  - 0
+  - 6.8
+  - -100
+  - 0.0
+  - 0.0
   space: joint
+- description: flat and 90degree
+  name: flatRight
+  position:
+  - -90
+  - 0
+  - 0
+  - 0.0
+  - 0.0
+  space: joint
+- description: flat and 90degree
+  name: flatLeft
+  position:
+  - 90
+  - 0
+  - 0
+  - 0.0
+  - 0.0
+  space: joint
+- description: sq part
+  name: p1
+  position:
+  - 305.1889140890627
+  - 0.0
+  - 105.05797920097055
+  - -85.0
+  - 66.0
+  space: xyz
+- description: sq part
+  name: p2
+  position:
+  - 305.18861999999996
+  - 79.99983999999999
+  - 105.05694
+  - -85
+  - 66
+  space: xyz
+- description: sq part
+  name: p3
+  position:
+  - 385.18845999999996
+  - 79.99983999999999
+  - 105.05694
+  - -85
+  - 66
+  space: xyz
+- description: sq part
+  name: p4
+  position:
+  - 385.18845999999996
+  - -79.99983999999999
+  - 105.05694
+  - -85
+  - 66
+  space: xyz

@@ -27,7 +27,7 @@ class Arm:
 
     DEFAULT_CONFIG = "./config.yaml"
 
-    DEFAULT_SPEED = 6000
+    DEFAULT_SPEED = 60000
 
     ABSOLUTE = 0
     RELATIVE = 1
@@ -129,6 +129,21 @@ class Arm:
         self.robot.play(self.getMovementCommand(pose,speed=speed))
         self.waitForCompletion()
         print("Completed move")
+    def goToMultiPose(self,poses,speed=DEFAULT_SPEED):
+
+        """
+        MOVE THE ARM DIRECTLY TO A KNOWN POSE IN JOINT SPACE.
+
+        Move the arm to the absolute pose specified at the speed specified, defaulting to the default speed.
+        """
+        cmds = []
+        for p in poses:
+            print("Moving to {}".format(p.name))
+            cmds.append(self.getMovementCommand(p,speed=speed))
+        if len(cmds)>0:
+            self.robot.play(cmds)
+            self.waitForCompletion()
+            print("Completed move")
 
     def getMovementCommand(self,pose,movement=ABSOLUTE,speed=DEFAULT_SPEED):
 
@@ -197,8 +212,21 @@ class Arm:
             self.goToPose(pos)
         else:
             print(name," Position not Found")
+            
+    def goToMultiPositionNames(self,names):
+        poses = []
+        for name in names:
+            pos = self.positionStore.getPostion(name)
+            if pos != None:
+                poses.append(pos)
+            else:
+                print(name," Position not Found")
+        if len(poses) > 0:
+            self.goToMultiPose(poses)
     # TODO Adjustment function
- 
+    def calibrateAndSave(self,prm):
+        self.robot.calibrate(prm)
+        self.robot.save_config()
     def setJ04Zero(self):
         """
         SET ALL JOINTS TO ZERO AND SAVE CONFIG FILE TO THE ONE IN USED

@@ -106,3 +106,21 @@
   - -85
   - 66
   space: xyz
+- description: flat and 90degree
+  name: pickingLeft
+  position:
+  - 90
+  - 20
+  - -90
+  - 0.0
+  - 0.0
+  space: joint
+- description: flat and 90degree
+  name: pickingRight
+  position:
+  - -90
+  - 20
+  - -90
+  - 0.0
+  - 0.0
+  space: joint

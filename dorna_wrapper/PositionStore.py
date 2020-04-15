@@ -1,6 +1,7 @@
 import yaml
 import enum
 import os
+import os.path
 from tabulate import tabulate
 
 class Direction(enum.Enum):
@@ -35,17 +36,20 @@ class Position:
 
 
 class PositionStore:
-    PATH = "./positions.yaml"
+    
     def __init__(self,filePath=None):
+        
+        self.positionPath = os.path.join(os.path.dirname(__file__),"../position_store/positions.yaml")
+        
         if filePath != None:
-            self.PATH = filePath
-        if os.path.isfile(self.PATH):
-            with open(self.PATH,'r') as stream:
+            self.positionPath = filePath
+        if os.path.isfile(self.positionPath):
+            with open(self.positionPath,'r') as stream:
                 self.positions = yaml.load(stream, Loader=yaml.SafeLoader)
                 print(self.positions)
     def getAllPositions(self):
-        if os.path.isfile(self.PATH):
-            with open(self.PATH,'r') as stream:
+        if os.path.isfile(self.positionPath):
+            with open(self.positionPath,'r') as stream:
                 self.positions = yaml.load(stream, Loader=yaml.SafeLoader)
                 return self.positions
         else:
@@ -56,7 +60,7 @@ class PositionStore:
                 return Position(name,pos['position'],pos['description'],pos['space'])
         return None
     def updateList(self,newList):
-        with open(self.PATH,'w') as wstream:
+        with open(self.positionPath,'w') as wstream:
             yaml.dump(newList,wstream)
                     
     def save(self,name,position,description,space):
@@ -65,8 +69,8 @@ class PositionStore:
                    'description':description,
                    'space':space
                    }
-        if os.path.isfile(self.PATH):
-            with open(self.PATH) as stream:
+        if os.path.isfile(self.positionPath):
+            with open(self.positionPath) as stream:
                 self.positions = yaml.load(stream, Loader=yaml.SafeLoader)
                 if self.positions != None:
                     for pos in self.positions:
@@ -78,12 +82,12 @@ class PositionStore:
                     print(tempPos," is saved!")
                     return 1
        
-        with open(self.PATH,'w') as stream:
+        with open(self.positionPath,'w') as stream:
             yaml.dump([tempPos],stream)
             print(tempPos," is saved!")
             return 1
     def delete(self,name):
-        if os.path.isfile(self.PATH):
+        if os.path.isfile(self.positionPath):
                 for pos in self.getAllPositions():
                     if pos['name'] == name:
                         self.positions.remove(pos)

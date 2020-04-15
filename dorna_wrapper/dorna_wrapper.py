@@ -1,4 +1,4 @@
-from dorna import Dorna
+from dorna_custom_api.api import Dorna
 from copy import deepcopy
 import time
 import datetime
@@ -7,11 +7,12 @@ import json
 
 import sys
 import os
+import os.path
 import platform
 
 import configparser
 
-from PositionStore import *
+from dorna_wrapper.PositionStore import *
 
 
 class Arm:
@@ -25,7 +26,7 @@ class Arm:
 
     # Utility constants
 
-    DEFAULT_CONFIG = "./config.yaml"
+    # DEFAULT_CONFIG = "../configuration_store/config.yaml"
 
     DEFAULT_SPEED = 60000
 
@@ -45,7 +46,7 @@ class Arm:
     PRM_TEMPLATE ={'path':'joint','movement':1}
 
     # Utility poses
-    positionStore = PositionStore()
+    
 
     HOME_POSE = Position('home',[0,135,-90,-45,0],"the HOME (resting) position",SPACE_JOINT)
     FLAT_POSE = Position('flat',[0,0,0,0,0],"the FLAT (outstretched) position",SPACE_JOINT)
@@ -64,16 +65,20 @@ class Arm:
 
         # Attempt to load a Dorna object with a configuration file, default to the desktop config if none is entered manually.
 
+        self.WORKING_DIRECTORY = os.getcwd()
+        self.FILE_DIRECTORY = os.path.dirname(__file__)
+        self.DEFAULT_CONFIG = os.path.join(self.FILE_DIRECTORY, "../configuration_store/config.yaml")
+        
+        self.positionStore = PositionStore()
+        
         config = config if config!= None else self.DEFAULT_CONFIG
 
-        self.WORKING_DIRECTORY = os.getcwd()
-
         try:
+            print(config)
             self.robot=Dorna(config)
             print("Loaded configuration file")
         except:
             print("Failed to load configuration file, please re-instantiate the arm object with a valid config.")
-            return 0
 
         # Attempt to connect the arm, defaulting to auto-port-detection.
 
@@ -203,7 +208,7 @@ class Arm:
     def updatePosition(self,name,position,description,space):
         self.positionStore.update(name,
                                   position=position,
-                                  description=description,
+                                  depositionStorescription=description,
                                   space=space)
                                   
     def goToPositionName(self,name):

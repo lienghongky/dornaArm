@@ -191,6 +191,12 @@ class Arm:
 
         return
     
+    
+    
+    #Gripper
+    def grip(self,grip=True,gripPressure=800):
+        value = gripPressure if grip else 200
+        self.robot.set_io({"servo":value})
     #Saving positon
     def showAllPositions(self):
         self.positionStore.showAllPositions()

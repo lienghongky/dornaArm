@@ -1,126 +1,99 @@
-- description: touch standing bar
-  name: kiss tools bar
+- description: motion1
+  name: '1'
   position:
-  - -120
-  - 40
-  - -40
+  - -30.0
+  - 47.12854507283244
+  - -126.46351365255504
+  - 79.3349685797226
   - 0.0
-  - 50.0
   space: joint
-- description: touch standing bar at j0 = 0
-  name: picking
+- description: motion2
+  name: '2'
   position:
-  - 0
-  - 15
-  - -100
-  - 0
-  - 66
+  - -30.0
+  - 60.33810645555307
+  - -124.72024601703578
+  - 64.3821395614827
+  - 0.0
   space: joint
-- description: lower part of standing bar
-  name: lowerBar
+- description: motion3
+  name: '3'
   position:
-  - -119
-  - 5
-  - -51
   - 45.0
-  - 50.0
-  space: joint
-- description: similar to home pose but with specifi joints
-  name: prePowerDown
-  position:
-  - 0
-  - 145
-  - -90
-  - 30.0
+  - 47.12854507283244
+  - -126.46351365255504
+  - 79.3349685797226
   - 0.0
   space: joint
-- description: flat full extended
-  name: flat
+- description: motion4
+  name: '4'
   position:
-  - 0
-  - 0
-  - 0
-  - 0.0
+  - 45.0
+  - 60.33810645555307
+  - -124.72024601703578
+  - 64.3821395614827
   - 0.0
   space: joint
-- description: very close to bar
-  name: pickingClose
+- description: motionPick
+  name: pick
   position:
-  - 0
-  - 6.8
-  - -100
-  - 0.0
-  - 0.0
-  space: joint
-- description: flat and 90degree
-  name: flatRight
-  position:
-  - -90
+  - 278.34590000000003
+  - -161.8361
+  - 235.17352
   - 0
   - 0
-  - 0.0
-  - 0.0
-  space: joint
-- description: flat and 90degree
-  name: flatLeft
-  position:
-  - 90
-  - 0
-  - 0
-  - 0.0
-  - 0.0
-  space: joint
-- description: sq part
-  name: p1
-  position:
-  - 305.1889140890627
-  - 0.0
-  - 105.05797920097055
-  - -85.0
-  - 66.0
   space: xyz
-- description: sq part
-  name: p2
+- description: motion before Pick
+  name: PrePick
   position:
-  - 305.18861999999996
-  - 79.99983999999999
-  - 105.05694
-  - -85
-  - 66
+  - 238.34597999999997
+  - -141.83614
+  - 275.17343999999997
+  - 0
+  - 0
   space: xyz
-- description: sq part
-  name: p3
+- description: motion rotation
+  name: rotation
   position:
-  - 385.18845999999996
-  - 79.99983999999999
-  - 105.05694
-  - -85
-  - 66
-  space: xyz
-- description: sq part
-  name: p4
-  position:
-  - 385.18845999999996
-  - -79.99983999999999
-  - 105.05694
-  - -85
-  - 66
-  space: xyz
-- description: flat and 90degree
-  name: pickingLeft
-  position:
-  - 90
-  - 20
-  - -90
-  - 0.0
+  - 59.2438
+  - 66.1595
+  - -116.13757999999996
+  - 49.9781
   - 0.0
   space: joint
-- description: flat and 90degree
-  name: pickingRight
+- description: motion drop
+  name: drop
   position:
-  - -90
-  - 20
-  - -90
+  - 141.83614
+  - 238.34597999999997
+  - 230.17382
+  - 0
+  - 0
+  space: xyz
+- description: motion after drop
+  name: backOff
+  position:
+  - 141.83614
+  - 238.34597999999997
+  - 275.17343999999997
+  - 0
+  - 0
+  space: xyz
+- description: motion rotate to pick pos
+  name: rotationToPick
+  position:
+  - -30.75619
+  - 66.1595
+  - -116.13757999999996
+  - 49.9781
   - 0.0
+  space: joint
+- description: preOperation
+  name: preOper
+  position:
+  - -30.75619
+  - 66.1595
+  - -116.13757999999996
+  - 49.9781
   - 0.0
   space: joint

@@ -6,7 +6,62 @@ import time
 
 from dorna_wrapper.dorna_wrapper import Arm
 
+
 testArm = Arm()
+def motions():
+    if testArm.isHomed:
+        for i in [1,2,3]:
+            testArm.grip(False)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['preOper'])
+            testArm.goToMultiPositionNames(['PrePick','pick'])
+            testArm.grip(True)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['preOper','rotation','drop'])
+            testArm.grip(False)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['backOff'])
+            testArm.goToMultiPositionNames(['drop'])
+            testArm.grip(True)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['backOff'])
+            testArm.goToMultiPositionNames(['preOper','PrePick','pick'])
+            testArm.grip(False)
+            testArm.waitForCompletion()
+def shakes():
+    if testArm.isHomed:
+        ##for i in [1,2,3]:
+            testArm.grip(False)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['preOper'])
+            testArm.goToMultiPositionNames(['PrePick','pick'])
+            testArm.grip(True)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['preOper','rotation'])
+            d = 90
+            
+            
+            testArm.adjustJoints({'j4':d})
+            testArm.adjustAxis('x',100)
+            testArm.adjustAxis('x',-10)
+            testArm.adjustAxis('x',10)
+            testArm.adjustAxis('x',-100)
+            testArm.adjustJoints({'j4':-d})
+            testArm.goToMultiPositionNames(['drop'])
+            testArm.grip(False)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['backOff'])
+            testArm.goToMultiPositionNames(['drop'])
+            testArm.grip(True)
+            testArm.waitForCompletion()
+            testArm.goToMultiPositionNames(['backOff'])
+            testArm.goToMultiPositionNames(['preOper','PrePick','pick'])
+            testArm.grip(False)
+            testArm.waitForCompletion()
+            
+      
+   
+'''
 #testArm.robot._prnt=True
 testArm.robot._log=[]
 testArm.robot._log_id=1
@@ -28,4 +83,4 @@ print("Completed Test Run, killing the connection")
 testArm.kill()
 
 print("killed")
-
+'''

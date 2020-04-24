@@ -8,6 +8,29 @@ from dorna_wrapper.dorna_wrapper import Arm
 
 
 testArm = Arm()
+
+def picking():
+    for i in [0,1]:    
+        testArm.grip(True)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([3,8,4,5])
+        testArm.grip(False)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([6,7,8])
+        testArm.grip(True)
+        testArm.waitForCompletion()
+        testArm.grip(False)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([7,6,5])
+        testArm.grip(True)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([4,8,3,2])
+        testArm.grip(False)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([9,3,8,9,2])
+
+   
+    
 def motions():
     if testArm.isHomed:
         for i in [1,2,3]:

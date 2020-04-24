@@ -191,12 +191,13 @@ class Arm:
 
         return
     
-    
+    def getState(self):
+        return json.loads(self.robot.device())['state']
     
     #Gripper
-    def grip(self,grip=True,gripPressure=800):
-        value = gripPressure if grip else 200
-        self.robot.set_io({"servo":value})
+    def grip(self,grip=True,gripPressure=0):
+        value = gripPressure if grip else 1
+        self.robot.set_io({"laser":value})
     #Saving positon
     def showAllPositions(self):
         self.positionStore.showAllPositions()
@@ -216,7 +217,23 @@ class Arm:
                                   position=position,
                                   depositionStorescription=description,
                                   space=space)
-                                  
+    def goToPositionID(self,i):
+        pos = self.positionStore.getPostionById(i)
+        if pos != None:
+            self.goToPose(pos)
+        else:
+            print(name," Position not Found")
+            
+    def goToMultiPositionIDs(self,ids):
+        poses = []
+        for i in ids:
+            pos = self.positionStore.getPostionById(i)
+            if pos != None:
+                poses.append(pos)
+            else:
+                print(name," Position not Found")
+        if len(poses) > 0:
+            self.goToMultiPose(poses)                              
     def goToPositionName(self,name):
         pos = self.positionStore.getPostion(name)
         if pos != None:

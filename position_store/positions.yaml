@@ -1,126 +1,94 @@
-- description: touch standing bar
-  name: kiss tools bar
+idFactory:
+  issuedIdCount: 9
+  lastId: 9
+positions:
+- description: touch tools
+  id: 1
+  name: pick
   position:
-  - -120
-  - 40
-  - -40
+  - -60
+  - 8
+  - -45
+  - -50.0
   - 0.0
-  - 50.0
   space: joint
-- description: touch standing bar at j0 = 0
-  name: picking
+- description: touch tools
+  id: 2
+  name: pick1
   position:
-  - 0
-  - 15
-  - -100
-  - 0
-  - 66
+  - -60
+  - 7
+  - -45
+  - -49.0
+  - 0.0
   space: joint
-- description: lower part of standing bar
-  name: lowerBar
+- description: touch tools
+  id: 3
+  name: pickUp
   position:
-  - -119
-  - 5
-  - -51
-  - 45.0
-  - 50.0
+  - -60
+  - 22
+  - -45
+  - -64.0
+  - 0.0
   space: joint
-- description: similar to home pose but with specifi joints
-  name: prePowerDown
+- description: touch tools
+  id: 4
+  name: dropUp
   position:
-  - 0
-  - 145
+  - 60
+  - 22
+  - -45
+  - -64.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 5
+  name: drop
+  position:
+  - 60
+  - 7
+  - -45
+  - -49.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 6
+  name: backForward
+  position:
+  - 60
+  - 9
+  - -45
+  - -34.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 7
+  name: backUp
+  position:
+  - 60
+  - 22
+  - -45
+  - -49.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 8
+  name: pickHight
+  position:
+  - -60
+  - 135
   - -90
-  - 30.0
+  - -45.0
   - 0.0
   space: joint
-- description: flat full extended
-  name: flat
+- description: touch tools
+  id: 9
+  name: pickBack
   position:
-  - 0
-  - 0
-  - 0
-  - 0.0
-  - 0.0
-  space: joint
-- description: very close to bar
-  name: pickingClose
-  position:
-  - 0
-  - 6.8
-  - -100
-  - 0.0
-  - 0.0
-  space: joint
-- description: flat and 90degree
-  name: flatRight
-  position:
-  - -90
-  - 0
-  - 0
-  - 0.0
-  - 0.0
-  space: joint
-- description: flat and 90degree
-  name: flatLeft
-  position:
-  - 90
-  - 0
-  - 0
-  - 0.0
-  - 0.0
-  space: joint
-- description: sq part
-  name: p1
-  position:
-  - 305.1889140890627
-  - 0.0
-  - 105.05797920097055
-  - -85.0
-  - 66.0
-  space: xyz
-- description: sq part
-  name: p2
-  position:
-  - 305.18861999999996
-  - 79.99983999999999
-  - 105.05694
-  - -85
-  - 66
-  space: xyz
-- description: sq part
-  name: p3
-  position:
-  - 385.18845999999996
-  - 79.99983999999999
-  - 105.05694
-  - -85
-  - 66
-  space: xyz
-- description: sq part
-  name: p4
-  position:
-  - 385.18845999999996
-  - -79.99983999999999
-  - 105.05694
-  - -85
-  - 66
-  space: xyz
-- description: flat and 90degree
-  name: pickingLeft
-  position:
-  - 90
-  - 20
-  - -90
-  - 0.0
-  - 0.0
-  space: joint
-- description: flat and 90degree
-  name: pickingRight
-  position:
-  - -90
-  - 20
-  - -90
-  - 0.0
+  - -60
+  - 11
+  - -45
+  - -34.0
   - 0.0
   space: joint

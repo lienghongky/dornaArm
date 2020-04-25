@@ -388,3 +388,10 @@ class Arm:
         self.adjustCoordinate({'x':xyz[0],
                                'y':xyz[1],
                                'z':xyz[2]},False)
+
+    def writeGcodeDirectToPort(gc):
+        '''
+        Writes whatever gcode you pass as a string 'gc' to the function directly to the port.
+        '''
+        self.robot._port.write((gc + '\n').encode())
+        return None

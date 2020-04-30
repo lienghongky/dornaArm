@@ -1,99 +1,94 @@
-- description: motion1
-  name: '1'
-  position:
-  - -30.0
-  - 47.12854507283244
-  - -126.46351365255504
-  - 79.3349685797226
-  - 0.0
-  space: joint
-- description: motion2
-  name: '2'
-  position:
-  - -30.0
-  - 60.33810645555307
-  - -124.72024601703578
-  - 64.3821395614827
-  - 0.0
-  space: joint
-- description: motion3
-  name: '3'
-  position:
-  - 45.0
-  - 47.12854507283244
-  - -126.46351365255504
-  - 79.3349685797226
-  - 0.0
-  space: joint
-- description: motion4
-  name: '4'
-  position:
-  - 45.0
-  - 60.33810645555307
-  - -124.72024601703578
-  - 64.3821395614827
-  - 0.0
-  space: joint
-- description: motionPick
+idFactory:
+  issuedIdCount: 9
+  lastId: 9
+positions:
+- description: touch tools
+  id: 1
   name: pick
   position:
-  - 278.34590000000003
-  - -161.8361
-  - 235.17352
-  - 0
-  - 0
-  space: xyz
-- description: motion before Pick
-  name: PrePick
-  position:
-  - 238.34597999999997
-  - -141.83614
-  - 275.17343999999997
-  - 0
-  - 0
-  space: xyz
-- description: motion rotation
-  name: rotation
-  position:
-  - 59.2438
-  - 66.1595
-  - -116.13757999999996
-  - 49.9781
+  - -60
+  - 8
+  - -45
+  - -50.0
   - 0.0
   space: joint
-- description: motion drop
+- description: touch tools
+  id: 2
+  name: pick1
+  position:
+  - -60
+  - 7
+  - -45
+  - -49.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 3
+  name: pickUp
+  position:
+  - -60
+  - 22
+  - -45
+  - -64.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 4
+  name: dropUp
+  position:
+  - 60
+  - 22
+  - -45
+  - -64.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 5
   name: drop
   position:
-  - 141.83614
-  - 238.34597999999997
-  - 230.17382
-  - 0
-  - 0
-  space: xyz
-- description: motion after drop
-  name: backOff
-  position:
-  - 141.83614
-  - 238.34597999999997
-  - 275.17343999999997
-  - 0
-  - 0
-  space: xyz
-- description: motion rotate to pick pos
-  name: rotationToPick
-  position:
-  - -30.75619
-  - 66.1595
-  - -116.13757999999996
-  - 49.9781
+  - 60
+  - 7
+  - -45
+  - -49.0
   - 0.0
   space: joint
-- description: preOperation
-  name: preOper
+- description: touch tools
+  id: 6
+  name: backForward
   position:
-  - -30.75619
-  - 66.1595
-  - -116.13757999999996
-  - 49.9781
+  - 60
+  - 9
+  - -45
+  - -34.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 7
+  name: backUp
+  position:
+  - 60
+  - 22
+  - -45
+  - -49.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 8
+  name: pickHight
+  position:
+  - -60
+  - 135
+  - -90
+  - -45.0
+  - 0.0
+  space: joint
+- description: touch tools
+  id: 9
+  name: pickBack
+  position:
+  - -60
+  - 11
+  - -45
+  - -34.0
   - 0.0
   space: joint

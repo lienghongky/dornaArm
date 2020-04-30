@@ -222,7 +222,7 @@ class Arm:
         if pos != None:
             self.goToPose(pos)
         else:
-            print(name," Position not Found")
+            print(i," Position not Found")
             
     def goToMultiPositionIDs(self,ids):
         poses = []

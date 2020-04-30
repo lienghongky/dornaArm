@@ -7,7 +7,7 @@
         <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
         
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     </head>
@@ -19,12 +19,30 @@
         .value{
             color:red;
         }
+    
+        .scrollable-wrapper {
+            height: 100%;
+            overflow-y: scroll;
+      
+        }
+        .row {
+            margin: 0;
+        }
+        /* #leftBar, #content{
+            transition: 3s;
+        }
+     */
     </style>
     <body>
-        <div class="m-0 p-0 m-0">
-            <h4 class="mt-4 text-center text-5xl">Dorna Arm</h4>
-            <div class="row ">
-                <div class="col-md-3 bg-gray-700 p-4">
+        <div class="row">
+            <button class="btn btn-primary" id="btnToggle">
+                <i class=""></i>
+                Toggle
+            </button>
+        </div>
+        <div class="row" style="height: 100%;">
+            <div id="leftBar" class="col-3 scrollable-wrapper p-0">
+                <div class="col-md-12  bg-gray-700 p-4">
                     <h4 class="text-center p-4 text-white"> ROBOT</h4>
                     <div class="p-4 row">
                         <p class=" col-sm-6 text-sm text-white">Connect to robot:</p>
@@ -94,7 +112,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-9">
+            </div>
+            <div id="content" class="col scrollable-wrapper p-0">
+                <div class="col-md-12 m-0 p-0">
                     <table class="table table-hover table-dark">
                         <thead>
                             <tr>
@@ -159,5 +179,31 @@
                 </div>
             </div>
         </div>
+    
     </body>
+
+    <script>
+        $(document).ready(function (){
+            $("#btnToggle").on('click', function(){
+                
+                $("#leftBar").animate({
+                            display: "toggle",
+                        }, {
+                            duration: 500,
+                            specialEasing: {
+                            display: "linear",
+                            },
+                            complete: function() {
+                            
+                            }
+                        });
+            })
+        })
+
+        // document.getElementById("btnToggle").onclick = function(){
+        //     const currentVisibility = document.getElementById("leftBar").style.display
+        //     document.getElementById("leftBar").style.display = currentVisibility == "none" ? "inline" : "none";
+        // }
+    </script>
 </html>
+

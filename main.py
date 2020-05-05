@@ -4,14 +4,21 @@ app = Flask(__name__)
 arm = Arm()
 
 
-@app.route('/get-state')
-def getState():
-    return arm.getState()
-@app.route('/get-positions')
-def getPosition():
-    return arm.positionStore.getAllPositions()
 
-
+@app.route('/update/<int:id>')
+def delete(id):
+    print("Deleting ",id)
+    res = arm.positionStore.deleteWithId(id);
+    print("Deleting ",res)
+    
+    return redirect('/')
+@app.route('/delete/<int:id>')
+def delete(id):
+    print("Deleting ",id)
+    res = arm.positionStore.deleteWithId(id);
+    print("Deleting ",res)
+    
+    return redirect('/')
 @app.route('/gotoposition',methods=['POST'])
 def gotoPosition():
     if request.method == 'POST':

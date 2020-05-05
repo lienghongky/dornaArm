@@ -80,6 +80,7 @@ class Arm:
         except:
             print("Failed to load configuration file, please re-instantiate the arm object with a valid config.")
 
+    def connect(self):
         # Attempt to connect the arm, defaulting to auto-port-detection.
 
         try:

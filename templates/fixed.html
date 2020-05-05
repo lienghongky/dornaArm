@@ -134,10 +134,10 @@
                         
                           <tr>
                                 <th scope="row">
-                                <form action='/' method='POST'>
-                                <input name='id' value={{positions[i].get('id',-1)}} type='hidden'/>
-                                <input name='goto_button' type="submit" class="min-w-full pl-1 pr-1 btn btn-primary" value="GO"/>
-                                </form>
+                                <input id="btn-go" name='goto_button' type="submit" class="min-w-full pl-1 pr-1 mt-1 btn btn-primary" value="GO"/>
+                                <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#exampleModalScrollable" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
+                                <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETES</a>
+
                                  
                                 </th>
                                 <td>{{positions[i].get('id','n/a')}}</td>
@@ -169,10 +169,92 @@
                 </div>
             </div>
         </div>
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable  modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">UPDATE POSITION</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+               <form>
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">NAME</label>
+                    <input type="text" class="form-control" id="edit_name" placeholder="POSITION NAME">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="edit-j0">J0/X</label>
+                      <input type="number" class="form-control" id="edit_j0">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="edit-j1">J1/Y</label>
+                        <input type="number" class="form-control" id="edit_j1">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="edit-j2">J2/Z</label>
+                      <input type="number" class="form-control" id="edit_j2">
+                    </div>
+                     <div class="form-group col-md-2">
+                      <label for="edit-j3">J3/A</label>
+                      <input type="number" class="form-control" id="edit_j3">
+                    </div>
+                     <div class="form-group col-md-2">
+                      <label for="edit-j4">J4/B</label>
+                      <input type="number" class="form-control" id="edit_j4">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-space">SPANCE</label>
+                    <select class="form-control" id="edit_space">
+                      <option>joint</option>
+                      <option>xyz</option>
+        
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-description">DESCRIPTION</label>
+                    <textarea class="form-control" id="edit_description" rows="3"></textarea>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="btn_save" type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
     
     </body>
 
     <script>
+        var positions = {{ positions|tojson }};
+    
+         $(document).on("click", ".edit-click", function (pos) {
+             var posIndex = $(this).data('id');
+             var position = positions[posIndex];
+             console.log('data >>',position);
+             console.log('data >>',position.position);
+             $('#edit_name').val(position.name)
+             $('#edit_j0').val(position.postion[0])
+             $('#edit_j1').val(position.postion[1])
+             $('#edit_j2').val(position.postion[2])
+             $('#edit_j3').val(position.postion[3])
+             $('#edit_j4').val(position.postion[4])
+             $('#edit_space').val(position.space)
+             $('#edit_description').val(position.description)
+             //$(".modal-body #bookId").val( myBookId );
+             // As pointed out in comments, 
+             // it is unnecessary to have to manually call the modal.
+             // $('#addBookDialog').modal('show');
+            });
+   
         $('#btn-connect').on('click',function(){
             $.ajax({
                 type:'POST',
@@ -187,17 +269,7 @@
         $(document).ready(function (){
             $("#btnToggle").on('click', function(){
                 
-                $("#leftBar").animate({
-                            display: "toggle",
-                        }, {
-                            duration: 500,
-                            specialEasing: {
-                            display: "linear",
-                            },
-                            complete: function() {
-                            
-                            }
-                        });
+                $("#leftBar").toggle();
             })
         })
 

@@ -3,46 +3,6 @@ idFactory:
   lastId: 9
 positions:
 - description: touch tools
-  id: 1
-  name: pick
-  position:
-  - -60
-  - 8
-  - -45
-  - -50.0
-  - 0.0
-  space: joint
-- description: touch tools
-  id: 2
-  name: pick1
-  position:
-  - -60
-  - 7
-  - -45
-  - -49.0
-  - 0.0
-  space: joint
-- description: touch tools
-  id: 3
-  name: pickUp
-  position:
-  - -60
-  - 22
-  - -45
-  - -64.0
-  - 0.0
-  space: joint
-- description: touch tools
-  id: 4
-  name: dropUp
-  position:
-  - 60
-  - 22
-  - -45
-  - -64.0
-  - 0.0
-  space: joint
-- description: touch tools
   id: 5
   name: drop
   position:

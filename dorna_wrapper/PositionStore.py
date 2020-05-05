@@ -3,6 +3,8 @@ import enum
 import os
 import os.path
 from tabulate import tabulate
+from rich.table import Column, Table
+from rich.console import Console
 
 class Direction(enum.Enum):
     FORWARD = 'x'
@@ -138,8 +140,24 @@ class PositionStore:
                         self.updateList(self.positions)
                         print(name," deleted!")
                         return 1
+                print(name," position not found!")
+                return -1
         else:
            print(name," position not found!")
+           return -1
+    def deleteWithId(self,ID):
+        if os.path.isfile(self.positionPath):
+                for pos in self.getAllPositions():
+                    print(pos['id'],pos['id']==ID)
+                    if pos['id'] == ID:
+                        self.positions.remove(pos)
+                        self.updateList(self.positions)
+                        print(ID," deleted!")
+                        return 1
+                print(ID," position not found!")
+                return -1
+        else:
+           print(ID," position not found!")
            return -1
     def update(self,name,position=None,description=None,space=None):
         for pos in self.getAllPositions():
@@ -155,7 +173,39 @@ class PositionStore:
                 return 1
         print(name," not found!")
         return -1
+    def updateWithId(self,ID,name,position=None,description=None,space=None):
+        for pos in self.getAllPositions():
+            if pos['id'] == ID:
+                tempPos = pos
+                tempPos['name'] = name if name != None else pos['name'] 
+                tempPos['position'] = position if position != None else pos['position']
+                tempPos['description'] = description if description != None else pos['description']
+                tempPos['space'] = space if space != None else pos['space']
+                index = self.positions.index(pos)
+                self.positions[index] = tempPos
+                self.updateList(self.positions)
+                print("updated!")
+                return 1
+        print(name," not found!")
+        return -1
     def showAllPositions(self):
         print(tabulate(self.getAllPositions(),
                  headers='keys',tablefmt='fancy_grid'))
+    def showAllPositionsColor(self):
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Date", style="dim", width=12)
+        table.add_column("Title")
+        table.add_column("Production Budget", justify="right")
+        table.add_column("Box Office", justify="right")
+        table.add_row(
+            "Dev 20, 2019", "Star Wars: The Rise of Skywalker", "$275,000,0000", "$375,126,118"
+        )
+        table.add_row(
+            "May 25, 2018",
+            "[red]Solo[/red]: A Star Wars Story",
+            "$275,000,0000",
+            "$393,151,347",
+        )
+        console.print(table)
             

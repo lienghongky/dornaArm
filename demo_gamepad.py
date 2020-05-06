@@ -13,6 +13,7 @@ import math
 from dorna_wrapper.dorna_wrapper import Arm
 
 testArm = Arm()
+testArm.connect()
 #testArm.home()
 rate = 5
 

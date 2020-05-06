@@ -4,13 +4,13 @@ idFactory:
 positions:
 - description: touch tools
   id: 5
-  name: drop
+  name: d drop
   position:
-  - 60
-  - 7
-  - -45
-  - -49.0
-  - 0.0
+  - '60'
+  - '7'
+  - '-45'
+  - '-49'
+  - '0'
   space: joint
 - description: touch tools
   id: 6

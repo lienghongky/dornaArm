@@ -40,12 +40,9 @@
             <div id="leftBar" class="col-3 scrollable-wrapper p-0">
                 <div class="col-md-12  bg-gray-700 p-4">
                     <h4 class="text-center p-4 text-white"> ROBOT</h4>
-                    <div class="p-4 row">
-                        <p class=" col-sm-6 text-sm text-white">Connect to robot:</p>
-                       
-                        <button type="button" id='btn-connect' class="col-sm-6 btn btn-primary">Connect</button>
-                    
-                    </div>
+                     <p class=" col-sm-6 text-sm text-white">Connect to robot:</p>
+                     <button type="button" id='btn_connect' class="col-sm-6 btn btn-success m-2">Connect</button>
+                    <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
                     <div class="progress row m-2">
                         <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -116,7 +113,8 @@
                     <table class="table table-hover table-dark">
                         <thead>
                             <tr>
-                              <th colspan="2">Saved Positionn</th>
+                              <th colspan="5">Saved Positionn</th>
+                              <th><button id="btn_add" class="min-w-full pl-1 pr-1 mt-1 btn btn-primary" >ADD POSITION</button></th>
                             </tr>
                           </thead>
                         <thead>
@@ -134,9 +132,9 @@
                         
                           <tr>
                                 <th scope="row">
-                                <input id="btn-go" name='goto_button' type="submit" class="min-w-full pl-1 pr-1 mt-1 btn btn-primary" value="GO"/>
-                                <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#exampleModalScrollable" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
-                                <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETES</a>
+                                <button id="btn_go" data-id={{positions[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
+                                <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#myModal" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
+                                <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
 
                                  
                                 </th>
@@ -172,7 +170,7 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable  modal-lg" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -183,35 +181,36 @@
               </div>
               <div class="modal-body">
                <form>
+                   <input name="edit_id" type="hidden" class="form-control" id="edit_id">
                   <div class="form-group">
                     <label for="exampleFormControlInput1">NAME</label>
-                    <input type="text" class="form-control" id="edit_name" placeholder="POSITION NAME">
+                    <input name="edit_name" type="text" class="form-control" id="edit_name" placeholder="POSITION NAME">
                   </div>
                   <div class="form-row">
                     <div class="form-group col-md-2">
                       <label for="edit-j0">J0/X</label>
-                      <input type="number" class="form-control" id="edit_j0">
+                      <input name="edit_j0" type="number" class="form-control" id="edit_j0">
                     </div>
                     <div class="form-group col-md-2">
                         <label for="edit-j1">J1/Y</label>
-                        <input type="number" class="form-control" id="edit_j1">
+                        <input name="edit_j1" type="number" class="form-control" id="edit_j1">
                     </div>
                     <div class="form-group col-md-2">
                       <label for="edit-j2">J2/Z</label>
-                      <input type="number" class="form-control" id="edit_j2">
+                      <input name="edit_j2" type="number" class="form-control" id="edit_j2">
                     </div>
                      <div class="form-group col-md-2">
                       <label for="edit-j3">J3/A</label>
-                      <input type="number" class="form-control" id="edit_j3">
+                      <input name="edit_j3" type="number" class="form-control" id="edit_j3">
                     </div>
                      <div class="form-group col-md-2">
                       <label for="edit-j4">J4/B</label>
-                      <input type="number" class="form-control" id="edit_j4">
+                      <input name="edit_j4" type="number" class="form-control" id="edit_j4">
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="edit-space">SPANCE</label>
-                    <select class="form-control" id="edit_space">
+                    <select name="edit_space" class="form-control" id="edit_space">
                       <option>joint</option>
                       <option>xyz</option>
         
@@ -219,14 +218,15 @@
                   </div>
                   <div class="form-group">
                     <label for="edit-description">DESCRIPTION</label>
-                    <textarea class="form-control" id="edit_description" rows="3"></textarea>
+                    <textarea name="edit_description"class="form-control" id="edit_description" rows="3"></textarea>
                   </div>
-                </form>
+                  </form>
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 <button id="btn_save" type="button" class="btn btn-primary">Save changes</button>
               </div>
+            
             </div>
           </div>
         </div>
@@ -235,43 +235,133 @@
 
     <script>
         var positions = {{ positions|tojson }};
-    
+            $(document).on("click", ".go-click", function (pos) {
+             var id = $(this).data('id');
+              $.ajax({
+                type:'POST',
+                url:'/goto_position/'+id,
+                data:{},
+                success:function(res){
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            });
+           
          $(document).on("click", ".edit-click", function (pos) {
              var posIndex = $(this).data('id');
              var position = positions[posIndex];
              console.log('data >>',position);
              console.log('data >>',position.position);
+             $('#edit_id').val(position.id)
              $('#edit_name').val(position.name)
-             $('#edit_j0').val(position.postion[0])
-             $('#edit_j1').val(position.postion[1])
-             $('#edit_j2').val(position.postion[2])
-             $('#edit_j3').val(position.postion[3])
-             $('#edit_j4').val(position.postion[4])
+             $('#edit_j0').val(position.position[0])
+             $('#edit_j1').val(position.position[1])
+             $('#edit_j2').val(position.position[2])
+             $('#edit_j3').val(position.position[3])
+             $('#edit_j4').val(position.position[4])
              $('#edit_space').val(position.space)
              $('#edit_description').val(position.description)
-             //$(".modal-body #bookId").val( myBookId );
-             // As pointed out in comments, 
-             // it is unnecessary to have to manually call the modal.
-             // $('#addBookDialog').modal('show');
             });
-   
-        $('#btn-connect').on('click',function(){
+         $('#btn_save').on('click',function(e){
+             var id = $('#edit_id').val()
+             var name = $('#edit_name').val()
+             var j0 = $('#edit_j0').val()
+             var j1 = $('#edit_j1').val()
+             var j2 = $('#edit_j2').val()
+             var j3 = $('#edit_j3').val()
+             var j4 = $('#edit_j4').val()
+             var space = $('#edit_space').val()
+             var description = $('#edit_description').val()
+             var json = {id:id,
+                         name:name,
+                         position:[j0,j1,j2,j3,j4],
+                         space:space,
+                         description,description}
+             $.ajax({
+                type:'POST',
+                url:'/update',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    $('#myModal').modal('hide')
+                    window.location.href = '/'
+                    }
+                })
+             
+        })
+          $('#btn_add').on('click',function(e){
+               $.ajax({
+                type:'GET',
+                url:'/get_current_position/joint',
+                //data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res)
+                    pos = res.data
+                     $('#edit_id').val("")
+                     $('#edit_name').val("")
+                     $('#edit_j0').val(pos[0])
+                     $('#edit_j1').val(pos[1])
+                     $('#edit_j2').val(pos[2])
+                     $('#edit_j3').val(pos[3])
+                     $('#edit_j4').val(pos[4])
+                     $('#edit_description').val("")
+                    $('#myModal').modal('show')
+                    //window.location.href = '/'
+                    }
+                })
+            
+             
+        });
+         $('#btn_home').on('click',function(){
             $.ajax({
                 type:'POST',
-                url:'/gotoposition',
+                url:'/home',
                 data:{},
                 success:function(res){
                     console.log(res);
+                    //window.location.href = '/'
                     }
                 })
             
             });
+        $('#btn_connect').on('click',function(){
+            $.ajax({
+                type:'POST',
+                url:'/connect',
+                data:{},
+                success:function(res){
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            
+            });
+        
         $(document).ready(function (){
             $("#btnToggle").on('click', function(){
                 
                 $("#leftBar").toggle();
+                getPositions()
             })
         })
+        
+         function getPositions(){
+            $.ajax({
+                type:'GET',
+                url:'/get_position',
+                data:{},
+                success:function(res){
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            
+            }
 
         // document.getElementById("btnToggle").onclick = function(){
         //     const currentVisibility = document.getElementById("leftBar").style.display
@@ -279,4 +369,5 @@
         // }
     </script>
 </html>
+
 

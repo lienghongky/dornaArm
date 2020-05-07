@@ -1,6 +1,6 @@
 idFactory:
-  issuedIdCount: 9
-  lastId: 9
+  issuedIdCount: 10
+  lastId: 10
 positions:
 - description: touch tools
   id: 5

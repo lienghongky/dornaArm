@@ -1,0 +1,109 @@
+
+    {% extends "layout.html"%}
+    {% block content %}
+    <style>
+
+        pre {outline: 1px solid #ccc; padding: 5px; margin: 5px; }
+        .string { color: red }
+        .number { color: darkorange; }
+        .boolean { color: blue; }
+        .null { color: magenta; }
+        .key { color: green; }
+
+    .sup{
+        color: greenyellow;
+    }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+
+       <div class="row">
+           <div class="col-md-4  h-100" >
+            <div class="container">
+                <h3>SAVED CONFIG:</h3>
+                <pre id="code">
+                    <!-- <code id="" class="prettyprint">
+                    
+                    </code> -->
+                </pre>
+            </div>
+           </div>
+           <div class="col-md-8 bg-dark text-white p-4">
+                <div class="container">
+                    <h3>CONFIGURATOR:</h3>
+                    {%for key in config%}
+                <h5 class="sup">{{key}}:</h6>
+                    
+                        {%for key1 in config[key]%}
+                       
+                            
+                            {%if config[key][key1]is sequence and not (config[key][key1] is string) %}
+                            <div class="form-row">
+                                {%for value in config[key][key1]%}
+                                    <div class="form-group col-md-2 pl-8">
+                                        <label for="exampleFormControlInput1">{{key1}}</label>
+                                        <input id="{{key1}}" type="text" class="form-control" id="exampleFormControlInput1" placeholder="" value="{{value}}">
+                                    </div>
+                               
+                                {%endfor%}
+                            </div>
+                                <!-- <div class="row">
+                                    <div class="form-group w-50 pl-8">
+                                        <label for="exampleFormControlInput1">{{key1}}</label>
+                                        <input id="{{key1}}" type="text" class="form-control" id="exampleFormControlInput1" placeholder="" value="{{config[key][key1]}}">
+                                    </div>
+                                </div> -->
+                            {%else%}
+                            <div class="form-group w-50 pl-8">
+                                <label for="exampleFormControlInput1">{{key1}}</label>
+                                <input id="{{key1}}"  type="text" class="form-control" id="exampleFormControlInput1" placeholder="" value="{{config[key][key1]}}">
+                            </div>
+                            {% endif %}
+                        
+                        {%endfor%}
+                    
+               
+            {%endfor%}
+                </div>
+            
+           </div>
+           
+       </div>
+       <script>
+           var config = {{config|tojson}}
+           $(document).ready(function(e) {
+                var st = syntaxHighlight(config)
+               $('#code').html(st)
+             
+           })
+
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+        }
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+        function output(inp) {
+                document.body.appendChild(document.createElement('pre')).innerHTML = inp;
+                }
+
+       </script>
+
+
+
+
+    {% endblock %}

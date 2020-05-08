@@ -1,16 +1,7 @@
-<html>
-    <head>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <link rel="stylesheet" href="css/roundslider.min.css">
-        <script src="js/roundslider.min.js"></script>
 
-        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        
-        
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    </head>
+    {% extends "layout.html"%}
+    {% block content %}
+
     <style>
         .arrow{
             padding: 10px;
@@ -28,19 +19,24 @@
         .row {
             margin: 0;
         }
+        
     </style>
-    <body>
-        <div class="row">
-            <button class="btn btn-primary" id="btnToggle">
-                <i class=""></i>
-                Toggle
-            </button>
-        </div>
-        <div class="row" style="height: 100%;">
+        <div class="row" style="height: 92%;">
             <div id="leftBar" class="col-3 scrollable-wrapper p-0">
                 <div class="col-md-12  bg-gray-700 p-4">
-                    <h4 class="text-center p-4 text-white"> ROBOT</h4>
-                     <p class=" col-sm-6 text-sm text-white">Connect to robot:</p>
+                    
+                    <div class="row">
+                        <h4 class="text-center p-2 text-white self-center"> ROBOT</h4> 
+                        <div id="state_loading">
+                            <div class="spinner-grow text-success" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                          <div class="spinner-grow text-danger" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div> 
+                        </div>    
+                    </div>
+                    <p class=" col-sm-6 text-sm text-white">Connect:</p>
                      <button type="button" id='btn_connect' class="col-sm-6 btn btn-success m-2">Connect</button>
                     <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
                     <button type="button" id='btn_refresh' class="col-sm-6 btn btn-primary m-2">REFRESH</button>
@@ -72,15 +68,20 @@
                           </div>
                         {%endfor%}
                         <div class="pt-2">
-                            <button type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
+                            <button id="btn_send_xyz" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="content" class="col scrollable-wrapper p-0">
                 <div class="col-md-12 m-0 p-0">
-                    <table class="table table-hover table-dark">
-                        <thead>
+                    <div class="row bg-dark">
+                        <button class="btn btn-outline-primary m-2" id="btnToggle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"></path></svg>
+                        </button>
+                    </div>
+                    <table class="table table-hover">
+                        <thead class="thead-dark">
                             <tr>
                               <th colspan="5">Saved Positionn</th>
                               <th>
@@ -140,8 +141,6 @@
                         <div class="col-md-12 flex justify-center">
                             <button type="button" class="btn btn-primary arrow"> DOWN </button>
                         </div>
-
-                        {{config}}
                     
                     </div>
                     
@@ -212,7 +211,7 @@
           </div>
         </div>
     
-    </body>
+
 
     <script>
         var positions = {{ positions|tojson }};
@@ -253,11 +252,11 @@
          $('#btn_save').on('click',function(e){
              var id = $('#edit_id').val()
              var name = $('#edit_name').val()
-             var j0 = $('#edit_j0').val()
-             var j1 = $('#edit_j1').val()
-             var j2 = $('#edit_j2').val()
-             var j3 = $('#edit_j3').val()
-             var j4 = $('#edit_j4').val()
+             var j0 = parseFloat($('#edit_j0').val())
+             var j1 = parseFloat($('#edit_j1').val())
+             var j2 = parseFloat($('#edit_j2').val())
+             var j3 = parseFloat($('#edit_j3').val())
+             var j4 = parseFloat($('#edit_j4').val())
              var space = $('#edit_space').val()
              var description = $('#edit_description').val()
              var json = {id:id,
@@ -365,6 +364,7 @@
             });
 
             $('#btn_refresh').on('click',function(){
+                
                 animate(true)
                 $.ajax({
                     type:'GET',
@@ -404,8 +404,35 @@
                     }
                 })
         })
+        $('#btn_send_xyz').on('click',function(){
+             var x = parseFloat($('#X').val())
+             var y = parseFloat($('#Y').val())
+             var z = parseFloat($('#Z').val())
+             var a = parseFloat($('#A').val())
+             var b = parseFloat($('#B').val())
+             var json = {'x':x,
+                         'y':y,
+                         'z':z,
+                         'a':a,
+                         'b':b}
+            animate(true)
+            $.ajax({
+                type:'POST',
+                url:'/adjust_axis',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    console.log(res)
+                    
+                    }
+                })
+        })
         
         $(document).ready(function (){
+            $("#state_loading").css('display','none')
             $("#btnToggle").on('click', function(){
                 
                 $("#leftBar").toggle();
@@ -428,11 +455,17 @@
                     
         }
         function animate(isAnimated=true){
+           
             if (isAnimated){
                 $("#loading").addClass("progress-bar-animated");
+                $("#state_loading").removeAttr('style')
+                
               
             }else{
                 $("#loading").removeClass("progress-bar-animated");
+                $("#state_loading").css('display','none')
+                
+               
             }
         }
          function getPositions(){
@@ -453,6 +486,6 @@
         //     document.getElementById("leftBar").style.display = currentVisibility == "none" ? "inline" : "none";
         // }
     </script>
-</html>
 
+{% endblock %}
 

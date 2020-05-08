@@ -1,16 +1,16 @@
 idFactory:
-  issuedIdCount: 10
-  lastId: 10
+  issuedIdCount: 11
+  lastId: 11
 positions:
 - description: touch tools
   id: 5
   name: d drop
   position:
-  - '60'
-  - '7'
-  - '-45'
-  - '-49'
-  - '0'
+  - 60
+  - 7
+  - -45
+  - -49
+  - 0
   space: joint
 - description: touch tools
   id: 6
@@ -51,4 +51,14 @@ positions:
   - -45
   - -34.0
   - 0.0
+  space: joint
+- description: 'Befor picking the camera '
+  id: 11
+  name: pickCamera
+  position:
+  - -30
+  - 45
+  - -55
+  - -75
+  - 0
   space: joint

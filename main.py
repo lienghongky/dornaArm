@@ -4,13 +4,18 @@ import json
 app = Flask(__name__)
 arm = Arm()
 def resposePositions():
+    arm.waitForCompletion()
     joint = json.loads(arm.getPosition('joint'))
     xyz = json.loads(arm.getPosition('xyz'))
     #pos = arm.getPosition(space)
     respose = {'success':True,'data':{'joint':joint,'xyz':xyz}}
-    print("updating ",respose)
+    print("respose position ",respose)
     return make_response(json.dumps(respose),200)
 
+
+
+
+#### API ROUTE
 @app.route('/get_current_position/<string:space>',methods=['GET'])
 def getCurrentPosition(space):
     pos = json.loads(arm.getPosition(space))
@@ -44,7 +49,7 @@ def update():
 @app.route('/delete/<int:id>')
 def delete(id):
     print("Deleting ",id)
-    res = arm.positionStore.deleteWithId(id);
+    res = arm.positionStore.deleteWithId(id)
     print("Deleting ",res)
     return redirect('/')
 
@@ -58,6 +63,11 @@ def adjust_joint():
     cmd = request.json
     arm.adjustJoints(cmd,False)
     return resposePositions()
+@app.route('/adjust_axis',methods=['POST'])
+def adjust_axis():
+    cmd = request.json
+    arm.adjustCoordinate(cmd,False)
+    return resposePositions()
 @app.route('/home',methods=['POST'])
 def home():
     arm.home()
@@ -69,15 +79,17 @@ def connect():
    
     return resposePositions()
 
-
+#### PAGE ROUTE
 @app.route('/',methods=['GET','POST'])
 def index():
     #arm.connect()
     positions = arm.positionStore.getAllPositions()
     posCount = len(positions)
     config = json.loads(arm.robot.config())
-
-    
     return render_template('fixed.html',posCount=posCount,positions=positions,config=config)
+@app.route('/config',methods=['GET','POST'])
+def configPage():
+    config = json.loads(arm.robot.config())   
+    return render_template('config.html',config=config)
 if __name__ == '__main__':
     app.run(debug=True)

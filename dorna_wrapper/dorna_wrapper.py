@@ -132,7 +132,9 @@ class Arm:
         """
 
         print("Moving to {}".format(pose.description))
-        self.robot.play(self.getMovementCommand(pose,speed=speed))
+        cmd = self.getMovementCommand(pose,speed=speed)
+        print(cmd)
+        self.robot.play(cmd)
         self.waitForCompletion()
         print("Completed move")
     def goToMultiPose(self,poses,speed=DEFAULT_SPEED):
@@ -220,6 +222,7 @@ class Arm:
                                   space=space)
     def goToPositionID(self,i):
         pos = self.positionStore.getPostionById(i)
+        print('id :',i,' pos',pos.position)
         if pos != None:
             self.goToPose(pos)
         else:
@@ -232,7 +235,7 @@ class Arm:
             if pos != None:
                 poses.append(pos)
             else:
-                print(name," Position not Found")
+                print(i," Position not Found")
         if len(poses) > 0:
             self.goToMultiPose(poses)                              
     def goToPositionName(self,name):
@@ -249,7 +252,9 @@ class Arm:
             if pos != None:
                 poses.append(pos)
             else:
+                
                 print(name," Position not Found")
+                return
         if len(poses) > 0:
             self.goToMultiPose(poses)
     # TODO Adjustment function

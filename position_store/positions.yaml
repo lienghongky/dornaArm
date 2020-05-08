@@ -1,6 +1,6 @@
 idFactory:
-  issuedIdCount: 11
-  lastId: 11
+  issuedIdCount: 12
+  lastId: 12
 positions:
 - description: touch tools
   id: 5
@@ -16,11 +16,11 @@ positions:
   id: 6
   name: backForward
   position:
-  - 60
+  - 15
   - 9
   - -45
-  - -34.0
-  - 0.0
+  - -34
+  - 0
   space: joint
 - description: touch tools
   id: 7
@@ -60,5 +60,15 @@ positions:
   - 45
   - -55
   - -75
+  - 0
+  space: joint
+- description: touch the ceiling
+  id: 12
+  name: touch the ceiling
+  position:
+  - -120
+  - 75
+  - -75
+  - 30
   - 0
   space: joint

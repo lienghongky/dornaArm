@@ -26,7 +26,7 @@
                 <div class="col-md-12  bg-gray-700 p-4">
                     
                     <div class="row">
-                        <h4 class="text-center p-2 text-white self-center"> ROBOT</h4> 
+                            <h4 class="text-center p-2 text-white self-center"> ROBOT</h4> 
                         <div id="state_loading">
                             <div class="spinner-grow text-success" role="status">
                                 <span class="sr-only">Loading...</span>
@@ -36,7 +36,7 @@
                           </div> 
                         </div>    
                     </div>
-                    <p class=" col-sm-6 text-sm text-white">Connect:</p>
+                    <p id="connection"class=" col-sm-6 text-sm text-white">Connect:</p>
                      <button type="button" id='btn_connect' class="col-sm-6 btn btn-success m-2">Connect</button>
                     <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
                     <button type="button" id='btn_refresh' class="col-sm-6 btn btn-primary m-2">REFRESH</button>
@@ -356,6 +356,7 @@
                 dataType:'json',
                 data:{},
                 success:function(res){
+                    $('connection').html("Connection: Success")
                     $("#loading").removeClass("progress-bar-animated");
                     bindPositions(res)
                     }

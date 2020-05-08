@@ -25,6 +25,10 @@
                     
                     </code> -->
                 </pre>
+                <div class="flex justify-center p-4">
+                    <button class="btn btn-success left-auto right-auto">PUBLISH CONFIGURATION</button>
+                </div>
+                
             </div>
            </div>
            <div class="col-md-8 bg-dark text-white p-4">
@@ -37,7 +41,7 @@
                        
                             
                             {%if config[key][key1]is sequence and not (config[key][key1] is string) %}
-                            <div class="form-row">
+                            <div class="form-row pl-8">
                                 {%for value in config[key][key1]%}
                                     <div class="form-group col-md-2 pl-8">
                                         <label for="exampleFormControlInput1">{{key1}}</label>
@@ -63,6 +67,9 @@
                     
                
             {%endfor%}
+            <div class="flex justify-center p-4">
+                <button class="btn btn-success left-auto right-auto">PREVIEW</button>
+            </div>
                 </div>
             
            </div>

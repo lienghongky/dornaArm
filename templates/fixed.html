@@ -41,7 +41,7 @@
                     <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
                     <button type="button" id='btn_refresh' class="col-sm-6 btn btn-primary m-2">REFRESH</button>
                     <div class="progress row m-2">
-                        <div id="loading" class="progress-bar progress-bar-striped bg-success " role="progressbar" style="width: 100%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="loading" class="progress-bar progress-bar-striped bg-warning " role="progressbar" style="width: 0%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="p-4 rounded-lg rounded-l-none bg-gray-600">
                         {%for j in ['J0','J1','J2','J3','J4']%}
@@ -70,6 +70,9 @@
                         <div class="pt-2">
                             <button id="btn_send_xyz" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
                         </div>
+                    </div>
+                    <div class="pt-2">
+                        <button id="btn_grip" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Grip</button>
                     </div>
                 </div>
             </div>
@@ -274,6 +277,7 @@
                     console.log(res);
                     $('#myModal').modal('hide')
                     window.location.href = '/'
+                    bindPositions(res)
                     }
                 })
              
@@ -348,6 +352,7 @@
             });
         $('#btn_connect').on('click',function(){
             console.log(config)
+            animate(true)
             $("#loading").addClass("progress-bar-animated");
             $.ajax({
                 type:'POST',
@@ -356,9 +361,9 @@
                 dataType:'json',
                 data:{},
                 success:function(res){
-                    $('connection').html("Connection: Success")
-                    $("#loading").removeClass("progress-bar-animated");
                     bindPositions(res)
+                    animate(false)
+                    
                     }
                 })
             
@@ -430,7 +435,26 @@
                     
                     }
                 })
-        })
+        });
+        var grip = true
+        $('#btn_grip').on('click',function(){
+             grip = !grip;
+             var json = {'grip':grip}
+            animate(true)
+            $.ajax({
+                type:'POST',
+                url:'/grip',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    console.log(res)
+                    
+                    }
+                })
+        });
         
         $(document).ready(function (){
             $("#state_loading").css('display','none')
@@ -458,13 +482,15 @@
         function animate(isAnimated=true){
            
             if (isAnimated){
+                $("#loading").css('width','100%');
                 $("#loading").addClass("progress-bar-animated");
-                $("#state_loading").removeAttr('style')
+                $("#state_loading").removeAttr('style');
                 
               
             }else{
                 $("#loading").removeClass("progress-bar-animated");
-                $("#state_loading").css('display','none')
+                $("#loading").css('width','0%');
+                $("#state_loading").css('display','none');
                 
                
             }

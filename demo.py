@@ -2,32 +2,36 @@
 
 # Demo script using the drona_wrapper class
 
-import time 
+import time
 
+from dorna_custom_api.api import Dorna
 from dorna_wrapper.dorna_wrapper import Arm
 
-
+config = "./configuration_store/config.yaml"
+#robot=Dorna(config)
 testArm = Arm()
-
+#testArm.xyz_to_joint(np.array([10,0,0,0,0,0]))
 def picking():
     for i in [0,1]:    
-        testArm.grip(True)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([3,8,4,5])
+        testArm.goToMultiPositionIDs([18,19])
         testArm.grip(False)
         testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([6,7,8])
+        testArm.goToMultiPositionIDs([18,19])
         testArm.grip(True)
         testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([22,23])
         testArm.grip(False)
         testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([7,6,5])
+        testArm.goToMultiPositionIDs([22,23])
         testArm.grip(True)
         testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([4,8,3,2])
+        testArm.goToMultiPositionIDs([22,21,20])
         testArm.grip(False)
         testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([9,3,8,9,2])
+        testArm.goToMultiPositionIDs([21,20])
+        testArm.grip(True)
+        testArm.waitForCompletion()
+        testArm.goToMultiPositionIDs([21,8])
 
    
     

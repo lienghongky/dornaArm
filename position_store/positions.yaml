@@ -1,37 +1,7 @@
 idFactory:
-  issuedIdCount: 12
-  lastId: 12
+  issuedIdCount: 23
+  lastId: 23
 positions:
-- description: touch tools
-  id: 5
-  name: d drop
-  position:
-  - 60
-  - 7
-  - -45
-  - -49
-  - 0
-  space: joint
-- description: touch tools
-  id: 6
-  name: backForward
-  position:
-  - 15
-  - 9
-  - -45
-  - -34
-  - 0
-  space: joint
-- description: touch tools
-  id: 7
-  name: backUp
-  position:
-  - 60
-  - 22
-  - -45
-  - -49.0
-  - 0.0
-  space: joint
 - description: touch tools
   id: 8
   name: pickHight
@@ -42,33 +12,63 @@ positions:
   - -45.0
   - 0.0
   space: joint
-- description: touch tools
-  id: 9
-  name: pickBack
+- description: before picking
+  id: 18
+  name: approchPick
   position:
-  - -60
-  - 11
-  - -45
-  - -34.0
-  - 0.0
-  space: joint
-- description: 'Befor picking the camera '
-  id: 11
-  name: pickCamera
-  position:
-  - -30
-  - 45
-  - -55
-  - -75
+  - -29.9999
+  - 19.2253
+  - -66.08130000000006
+  - -40
   - 0
   space: joint
-- description: touch the ceiling
-  id: 12
-  name: touch the ceiling
+- description: picking
+  id: 19
+  name: pick
   position:
-  - -120
-  - 75
-  - -75
-  - 30
+  - -29.99993556149966
+  - 14.83306529451053
+  - -63.99593222302707
+  - -37.693143071483455
+  - 0
+  space: joint
+- description: droping
+  id: 20
+  name: drop
+  position:
+  - 45
+  - 15.594595733309138
+  - -86.95632642201741
+  - -15.494279311291715
+  - 0
+  space: joint
+- description: pullBack
+  id: 21
+  name: pullBack
+  position:
+  - 45
+  - 22.347850399110087
+  - -90.59196423857858
+  - -18.611896160531515
+  - 0
+  space: joint
+- description: ''
+  id: 22
+  name: topOfRing
+  position:
+  - 0
+  - 32.38975474594324
+  - -52.7935587052727
+  - -66.45220604067055
+  - 0
+  space: joint
+- description: touchTheRing
+  id: 23
+  name: touchTheRing
+  position:
+  - 0
+  - 24.81364814475622
+  - -56.28290162126345
+  - -55.38675652349277
   - 0
   space: joint

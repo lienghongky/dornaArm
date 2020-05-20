@@ -44,7 +44,7 @@ def update():
         print("request ",request.json['id'])
         res = arm.positionStore.updateWithId(int(json['id']),json['name'],json['position'],json['description'],json['space'])
         print("updating ",res)
-    return make_response(jsonify('{success:true}'),200)
+    return resposePositions()
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -58,6 +58,13 @@ def gotoPosition(id):
     print("goto ",id)
     arm.goToPositionID(id)
     return  resposePositions()
+@app.route('/grip',methods=['POST'])
+def grip():
+    cmd = request.json
+    print(cmd)
+    arm.grip(cmd['grip'])
+    return  resposePositions()
+
 @app.route('/adjust_joint',methods=['POST'])
 def adjust_joint():
     cmd = request.json
@@ -71,7 +78,7 @@ def adjust_axis():
 @app.route('/home',methods=['POST'])
 def home():
     arm.home()
-    return make_response(jsonify('{success:true}'),200)
+    return resposePositions()
 
 @app.route('/connect',methods=['POST'])
 def connect():

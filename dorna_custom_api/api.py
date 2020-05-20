@@ -2699,7 +2699,8 @@ class Dorna(_port_usb, easy_method):
     def _xyz_to_joint(self,xyz):
         if any(xyz == None): # xyz contains None coordinate
             return {"joint": np.array([None for i in range(len(xyz))]), "status": 2}
-
+        for i in range(len(xyz)):
+            xyz[i] = self.robot._mm_to_inch(float(xyz))
         x = xyz[0]
         y = xyz[1]
         z = xyz[2]
@@ -2753,6 +2754,7 @@ class Dorna(_port_usb, easy_method):
         else:
             joint = np.array([teta_0, teta_1, teta_2, teta_3, teta_4])
 
+  
         return {"joint": joint, "status": status}
 
     # return: np.array

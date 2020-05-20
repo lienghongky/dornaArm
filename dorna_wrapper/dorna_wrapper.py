@@ -2,6 +2,8 @@ from dorna_custom_api.api import Dorna
 from copy import deepcopy
 import time
 import datetime
+import numpy as np
+import math
 
 import json
 
@@ -367,6 +369,38 @@ class Arm:
         self.go(tempPath)
         return tempPath
     """==================================================
+        MOVE with xyz Coordinate System Related to current rotation
+        =================================================
+    """
+    #pass in coordinate object as parameter
+    #ex:moveToCoordinate({'x':10,'y':20,'z':10})
+    def adjustArmCoordinate(self,coor):
+        values = [0,0,0,0,0,0]
+        cpos=json.loads(self.robot.position('x'))
+        
+        print('cpos',values)
+        for key in coor:
+            if key == 'x':
+                values[0] = self.robot._mm_to_inch(float(cpos[0]+coor[key]))
+            if key == 'y':
+                values[1] = self.robot._mm_to_inch(float(cpos[1]+coor[key]))
+            if key == 'z':
+                values[2] = self.robot._mm_to_inch(float(cpos[2]+coor[key]))
+            if key == 'a':
+                values[3] = coor[key]
+            if key == 'b':
+                values[4] = coor[key]
+                
+        print('newPos',values)
+        
+        conver = self.robot._xyz_to_joint(np.array(values))
+        print(np.array(values))
+        print('Joints: ',conver)
+        joints = conver['joint']
+        return joints #self.adjustJoints({'j1':joints[1],'j2':joints[2],'j3':joints[3] },False)
+        
+       
+    """==================================================
         wait 
         =================================================
     """
@@ -424,3 +458,70 @@ class Arm:
         '''
         self.robot._port.write((gc + '\n').encode())
         return None
+    
+    
+    def xyz_to_joint(self,xyz):
+        print("_xyz_to_joint INPUT: ",xyz)
+        if any(xyz == None): # xyz contains None coordinate
+            return {"joint": np.array([None for i in range(len(xyz))]), "status": 2}
+        config = self.robot._config
+        delta_e = self.robot._delta_e
+        l1 = self.robot._l1
+        l2 = self.robot._l2
+        bx = self.robot._bx
+        bz = self.robot._bz
+        x = xyz[0]
+        y = xyz[1]
+        z = xyz[2]
+        alpha = xyz[3]
+        beta = xyz[4]
+
+        alpha = math.radians(alpha)
+        beta = math.radians(beta)
+
+        # first we find the base rotation
+        teta_0 = math.atan2(y, x)
+
+        # next we assume base is not rotated and everything lives in x-z plane
+        x = math.sqrt(x ** 2 + y ** 2)
+
+        # next we update x and z based on base dimensions and hand orientation
+        x -= (bx + config["toolhead"]["x"] * math.cos(alpha))
+        z -= (bz + config["toolhead"]["x"] * math.sin(alpha))
+
+        # at this point x and z are the summation of two vectors one from lower arm and one from upper arm of lengths l1 and l2
+        # let L be the length of the overall vector
+        # we can calculate the angle between l1 , l2 and L
+        L = math.sqrt(x ** 2 + z ** 2)
+        L = np.round(L,13) # ???
+        # not valid
+        if L > (l1 + l2) or l1 > (l2 + L) or l2 > (l1 + L):  # in this case there is no solution
+            return {"joint": np.array([None for i in range(len(xyz))]), "status": 2}
+
+        # init status
+        status = 0
+        if L > (l1 + l2) - delta_e or self.robot._l1 > (l2 + L) - delta_e: # in this case there is no solution
+            status = 1
+
+        teta_l1_L = math.acos((l1 ** 2 + L ** 2 - l2 ** 2) / (2 * l1 * L))  # l1 angle to L
+        teta_L_x = math.atan2(z, x)  # L angle to x axis
+        teta_1 = teta_l1_L + teta_L_x
+        # note that the other solution would be to set teta_1 = teta_L_x - teta_l1_L. But for the dynamics of the robot the first solution works better.
+        teta_l1_l2 = math.acos((l1 ** 2 + l2 ** 2 - L ** 2) / (2 * l1 * l2))  # l1 angle to l2
+        teta_2 = teta_l1_l2 - math.pi
+        teta_3 = alpha - teta_1 - teta_2
+        teta_4 = beta
+        teta_0 = math.degrees(teta_0)
+        teta_1 = math.degrees(teta_1)
+        teta_2 = math.degrees(teta_2)
+        teta_3 = math.degrees(teta_3)
+        teta_4 = math.degrees(teta_4)
+
+
+        if len(xyz) == 6:
+            joint = np.array([teta_0, teta_1, teta_2, teta_3, teta_4, xyz[5]])
+        else:
+            joint = np.array([teta_0, teta_1, teta_2, teta_3, teta_4])
+
+        print("_xyz_to_joint",joint)
+        return {"joint": joint, "status": status}

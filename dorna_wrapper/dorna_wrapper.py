@@ -2,9 +2,7 @@ from dorna_custom_api.api import Dorna
 from copy import deepcopy
 import time
 import datetime
-import numpy as np
 import math
-
 import json
 
 import sys
@@ -459,7 +457,60 @@ class Arm:
         self.robot._port.write((gc + '\n').encode())
         return None
     
+    def adjustXyzToJoint(self,x,z):
+
+        bx = self.robot._bx
+        bz = self.robot._bz
+        l1 = 8
+        l2 = 6
+        j3 = json.loads(self.robot.position('j'))[3]
+        
+        
+        x = self.robot._mm_to_inch(x)
+        z = self.robot._mm_to_inch(z)
+        x -= bx#(bx + config["toolhead"]["x"] * math.cos(alpha))
+        z -= bz#(bz + config["toolhead"]["x"] * math.sin(alpha))
+        
+        L = math.sqrt(x**2 + z**2)
+        print('L = ',L)
+        
+        q5 = math.acos((l1**2 + l2**2 - L**2)/(2*l1*l2))
+        q2 = q5-math.pi
+        q1 = math.acos((l1**2 + L**2 - l2**2)/(2*l1*L))
+        q3 = math.atan2(z,x)
+
+        qa=q1+q3
+        j3 = math.radians(j3)-qa-q2
+
+
+        print('q1 = ',q1)
+        print('q2 = ',q2)
+        print('q3 = ',q3)
+        print('q5 = ',q5)
+        print('qa = ',qa)
+        print('j3 = ',j3)
+        
+        q1 = math.degrees(q1)
+        q2 = math.degrees(q2)
+        q3 = math.degrees(q3)
+        q5 = math.degrees(q5)
+        qa = math.degrees(qa)
+        j3 = math.degrees(j3)
+        
+       
+        print('\nq1 = ',q1)
+        print('q2 = ',q2)
+        print('q3 = ',q3)
+        print('q5 = ',q5)
+        print('qa = ',qa)
+        print('j3 = ',j3)
+        
+        
+        pos = {'j1':qa,'j2':q2,'j3':j3}
+        #self.adjustJoints(pos)
+        return pos
     
+    ''''
     def xyz_to_joint(self,xyz):
         print("_xyz_to_joint INPUT: ",xyz)
         if any(xyz == None): # xyz contains None coordinate
@@ -525,3 +576,4 @@ class Arm:
 
         print("_xyz_to_joint",joint)
         return {"joint": joint, "status": status}
+    '''

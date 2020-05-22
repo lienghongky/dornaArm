@@ -372,30 +372,19 @@ class Arm:
     """
     #pass in coordinate object as parameter
     #ex:moveToCoordinate({'x':10,'y':20,'z':10})
-    def adjustArmCoordinate(self,coor):
-        values = [0,0,0,0,0,0]
-        cpos=json.loads(self.robot.position('x'))
+    def adjustArmCoordinate(self,coor,relatively=True):
         
-        print('cpos',values)
-        for key in coor:
-            if key == 'x':
-                values[0] = self.robot._mm_to_inch(float(cpos[0]+coor[key]))
-            if key == 'y':
-                values[1] = self.robot._mm_to_inch(float(cpos[1]+coor[key]))
-            if key == 'z':
-                values[2] = self.robot._mm_to_inch(float(cpos[2]+coor[key]))
-            if key == 'a':
-                values[3] = coor[key]
-            if key == 'b':
-                values[4] = coor[key]
-                
-        print('newPos',values)
-        
-        conver = self.robot._xyz_to_joint(np.array(values))
-        print(np.array(values))
-        print('Joints: ',conver)
-        joints = conver['joint']
-        return joints #self.adjustJoints({'j1':joints[1],'j2':joints[2],'j3':joints[3] },False)
+        currentPos = json.loads(self.robot.position('x'))
+        x = coor.get('x',currentPos[0]) + currentPos[0]
+        z = coor.get('z',currentPos[2]) + currentPos[2]
+        jointConvert = self.xyzToJoint(x,z,coor.get('a',None))
+        if jointConvert['status']==0:
+            cjoint = son.loads(self.robot.position('j'))
+            joint = jointConvert['joint']
+            j1 = joint['j1'] - cjoint[1]
+            j2 = joint['j2'] - cjoint[2]
+            self.adjustJoints({'j1':j1,'j2':j2})
+        return jointConvert
         
        
     """==================================================
@@ -456,23 +445,47 @@ class Arm:
         '''
         self.robot._port.write((gc + '\n').encode())
         return None
-    
-    def adjustXyzToJoint(self,x,z):
 
+
+    """
+    status: 0: valid and safe xyz
+    status: 1: valid but not safe xyz
+    status: 2: not a valid xyz
+    """
+    def xyzToJoint(self,x=None,z=None,a=None):
+        config = self.robot._config
+        delta_e = self.robot._delta_e
+        l1 = self.robot._l1
+        l2 = self.robot._l2
         bx = self.robot._bx
         bz = self.robot._bz
-        l1 = 8
-        l2 = 6
-        j3 = json.loads(self.robot.position('j'))[3]
+        
+        limitJ0 = config['limit']['j0']
+        limitJ1 = config['limit']['j1']
+        limitJ2 = config['limit']['j2']
+        limitJ3 = [-135,135]
+        limitJ4 = [-360,360]
         
         
-        x = self.robot._mm_to_inch(x)
-        z = self.robot._mm_to_inch(z)
+        x = {True: self.robot._mm_to_inch(x) , False: self.robot._mm_to_inch(json.loads(self.robot.position('x'))[0])}[x != None]
+        z = {True: self.robot._mm_to_inch(z) , False: self.robot._mm_to_inch(json.loads(self.robot.position('x'))[2])}[z != None]
+        j3 = {True:a,False:json.loads(self.robot.position('j'))[3]}[a != None]
+        
+        print(x,z)
         x -= bx#(bx + config["toolhead"]["x"] * math.cos(alpha))
         z -= bz#(bz + config["toolhead"]["x"] * math.sin(alpha))
         
         L = math.sqrt(x**2 + z**2)
-        print('L = ',L)
+        print('L=',L)
+          # not valid
+        if L > (l1 + l2) or l1 > (l2 + L) or l2 > (l1 + L):  # in this case Provided XZ not safe
+            return {'joint':{'j1':None,'j2':None,'j3':None} ,'status': 2,'error':'invalid x or z or both'}
+
+        # init status
+        status = 0
+        if L > (l1 + l2) - delta_e or self.robot._l1 > (l2 + L) - delta_e: # in this case XYZ not safe
+            status = 1
+
         
         q5 = math.acos((l1**2 + l2**2 - L**2)/(2*l1*l2))
         q2 = q5-math.pi
@@ -481,32 +494,37 @@ class Arm:
 
         qa=q1+q3
         j3 = math.radians(j3)-qa-q2
-
-
-        print('q1 = ',q1)
-        print('q2 = ',q2)
-        print('q3 = ',q3)
-        print('q5 = ',q5)
-        print('qa = ',qa)
-        print('j3 = ',j3)
         
         q1 = math.degrees(q1)
-        q2 = math.degrees(q2)
         q3 = math.degrees(q3)
         q5 = math.degrees(q5)
-        qa = math.degrees(qa)
-        j3 = math.degrees(j3)
+        
+        j1 = math.degrees(qa)
+        j2 = math.degrees(q2)
+        j3 = -j1-j2
+        
+        if j3<limitJ3[0]:
+            j3 = j3+180
+        if j3>limitJ3[1]:
+            j3=j3-180
         
        
         print('\nq1 = ',q1)
-        print('q2 = ',q2)
+        print('q2/j2 = ',j2)
         print('q3 = ',q3)
         print('q5 = ',q5)
-        print('qa = ',qa)
+        print('qa/j1 = ',j1)
         print('j3 = ',j3)
         
+
         
-        pos = {'j1':qa,'j2':q2,'j3':j3}
+        if j1<limitJ1[0] or j1>limitJ1[1] or j2<limitJ2[0] or j2>limitJ2[1] or j3<limitJ3[0] or j3>limitJ3[1]:
+            return {'joint':{'j1':j1,'j2':j2,'j3':j3},'status': 1,'error':'Unsafe j1 or j2 or j3 or all'}
+        
+        #if L > (l1 + l2) or l1 > (l2 + L) or l2 > (l1 + L):  # in this case Provided XZ not safe
+        #    return {'j1':None,'j2':None,'j3':None ,'status': 2}
+        
+        pos = {'joint':{'j1':j1,'j2':j2,'j3':j3},'status':0}
         #self.adjustJoints(pos)
         return pos
     
@@ -560,7 +578,8 @@ class Arm:
         # note that the other solution would be to set teta_1 = teta_L_x - teta_l1_L. But for the dynamics of the robot the first solution works better.
         teta_l1_l2 = math.acos((l1 ** 2 + l2 ** 2 - L ** 2) / (2 * l1 * l2))  # l1 angle to l2
         teta_2 = teta_l1_l2 - math.pi
-        teta_3 = alpha - teta_1 - teta_2
+        teta_3 = alpha - teta_1 -
+        
         teta_4 = beta
         teta_0 = math.degrees(teta_0)
         teta_1 = math.degrees(teta_1)

@@ -56,7 +56,7 @@ def adjustXyzToJoint(x,z):
         pos = {'j1':qa,'j2':q2,'j3':j3}
         #self.adjustJoints(pos)
         return pos
-adjustXyzToJoint(1,10)
+#adjustXyzToJoint(1,10)
 
 def picking():
     for i in [0,1]:    

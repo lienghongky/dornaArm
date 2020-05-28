@@ -65,9 +65,10 @@ def grip():
     arm.grip(cmd['grip'])
     return  resposePositions()
 
-@app.route('/adjust_joint',methods=['POST'])
-def adjust_joint():
+@app.route('/adjust_joints',methods=['POST'])
+def adjust_joints():
     cmd = request.json
+    print('cmd ',cmd)
     arm.adjustJoints(cmd,False)
     return resposePositions()
 @app.route('/adjust_axis',methods=['POST'])
@@ -75,6 +76,27 @@ def adjust_axis():
     cmd = request.json
     arm.adjustCoordinate(cmd,False)
     return resposePositions()
+@app.route('/adjust_xyz',methods=['POST'])
+def adjust_xyz():
+    param = request.json
+    cmd = param.get('cmd',None)
+    print(param)
+    if param.get('movement',0) == 0 :
+        arm.adjustCoordinate(cmd)
+    else:
+        x = cmd.get('x',0)
+        y = cmd.get('y',0)
+        z = cmd.get('z',0)
+        j0 = param.get('j0',None)
+        arm.adjustArmCoordinateXYZ(x,y,z,j0)
+    return resposePositions()
+@app.route('/adjust_joint',methods=['POST'])
+def adjust_joint():
+    cmd = request.json
+    print('cmd ',cmd)
+    arm.adjustJoints(cmd,True)
+    return resposePositions()
+
 @app.route('/home',methods=['POST'])
 def home():
     arm.home()

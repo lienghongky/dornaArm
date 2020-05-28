@@ -14,6 +14,14 @@ import configparser
 
 from dorna_wrapper.PositionStore import *
 
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(21, GPIO.OUT)
+GPIO.setup(16, GPIO.OUT)
+
+
+
+
 
 class Arm:
 
@@ -132,6 +140,17 @@ class Arm:
         """
 
         print("Moving to {}".format(pose.description))
+        gpio = pose.gpio
+        if gpio != None:
+            pin = gpio.get('pin',None)
+            value = gpio.get('value',0)
+            if pin != None:
+                if type(pin) is str:
+                    self.robot.set_io({pin:value})
+                else:
+                    GPIO.output(pin, {0:False,1:True}[value])
+                return 'Set Io: '+str(pin)+' value: '+str(value)
+        print(gpio)
         cmd = self.getMovementCommand(pose,speed=speed)
         print(cmd)
         self.robot.play(cmd)
@@ -147,12 +166,28 @@ class Arm:
         cmds = []
         for p in poses:
             print("Moving to {}".format(p.name))
-            cmds.append(self.getMovementCommand(p,speed=speed))
+            gpio = p.gpio
+            if gpio != None:
+                pin = gpio.get('pin',None)
+                value = gpio.get('value',0)
+                if pin != None:
+                    if type(pin) is str:
+                        self.robot.set_io({pin:value})
+                    else:
+                        GPIO.output(pin, {0:False,1:True}[value])
+                    print('Set Io: '+str(pin)+' value: '+str(value))
+                    continue
+            
+            #cmds.append(self.getMovementCommand(p,speed=speed))
+            cmd = self.getMovementCommand(p,speed=speed)
+            self.robot.play(cmd)
+            self.waitForCompletion()
+        '''
         if len(cmds)>0:
             self.robot.play(cmds)
             self.waitForCompletion()
             print("Completed move")
-
+        '''
     def getMovementCommand(self,pose,movement=ABSOLUTE,speed=DEFAULT_SPEED):
 
         """
@@ -200,7 +235,7 @@ class Arm:
     #Gripper
     def grip(self,grip=True,gripPressure=0):
         value = gripPressure if grip else 1
-        self.robot.set_io({"laser":value})
+        self.robot.set_io({"out1":value,"out2":value,"out3":value,"out4":value})
     #Saving positon
     def showAllPositions(self):
         self.positionStore.showAllPositions()
@@ -372,18 +407,29 @@ class Arm:
     """
     #pass in coordinate object as parameter
     #ex:moveToCoordinate({'x':10,'y':20,'z':10})
+    def adjustArmCoordinateXYZ(self,x,y,z,j0=None):
+        currentPos = json.loads(self.robot.position('x'))
+        joints = json.loads(self.robot.position('j'))
+        j0 = {True:j0,False:joints[0]}[j0!=None]
+        dx = x*math.cos(math.radians(joints[0]))
+        dy = x*math.sin(math.radians(joints[0]))
+        
+        dy = dy+y*math.sin(math.radians(90-j0))
+        dx = dx-y*math.cos(math.radians(90-j0))
+        print({'dx':dx,'dy':dy})
+        self.adjustCoordinate({'x':dx,'y':dy,'z':z})
     def adjustArmCoordinate(self,coor,relatively=True):
         
         currentPos = json.loads(self.robot.position('x'))
-        x = coor.get('x',currentPos[0]) + currentPos[0]
-        z = coor.get('z',currentPos[2]) + currentPos[2]
+        x = coor.get('x',currentPos[0]) #+ currentPos[0]
+        z = coor.get('z',currentPos[2]) #+ currentPos[2]
         jointConvert = self.xyzToJoint(x,z,coor.get('a',None))
         if jointConvert['status']==0:
-            cjoint = son.loads(self.robot.position('j'))
+            cjoint = json.loads(self.robot.position('j'))
             joint = jointConvert['joint']
-            j1 = joint['j1'] - cjoint[1]
-            j2 = joint['j2'] - cjoint[2]
-            self.adjustJoints({'j1':j1,'j2':j2})
+            j1 = joint['j1']# - cjoint[1]
+            j2 = joint['j2']# - cjoint[2]
+            self.adjustJoints({'j1':j1,'j2':j2},False)
         return jointConvert
         
        

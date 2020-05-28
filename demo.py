@@ -59,24 +59,6 @@ def adjustXyzToJoint(x,z):
 #adjustXyzToJoint(1,10)
 
 def picking():
-    for i in [0,1]:    
-        testArm.goToMultiPositionIDs([18,19])
-        testArm.grip(False)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([18,19])
-        testArm.grip(True)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([22,23])
-        testArm.grip(False)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([22,23])
-        testArm.grip(True)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([22,21,20])
-        testArm.grip(False)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([21,20])
-        testArm.grip(True)
-        testArm.waitForCompletion()
-        testArm.goToMultiPositionIDs([21,8])
-
+    for i in [0]:    
+        testArm.goToMultiPositionIDs([8,28,35,30,36,28,25,33,25,26,32,31,35,32,31,36,32,26,25,28,30,35,28])
+ 

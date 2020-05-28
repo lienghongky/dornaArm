@@ -895,6 +895,7 @@ class Dorna(_port_usb, easy_method):
 
 
     def xyz_to_joint(self, xyz):
+        print('xyz to joint :',xyz)
         tmp_xyz =np.array(xyz[0:self._config["axis"]["number"]])
         # unit
         if self._config["unit"]["length"] == "mm":
@@ -1912,6 +1913,7 @@ class Dorna(_port_usb, easy_method):
                         _gc = {"id": self._system["command"][2][0]["id"],
                                 "gc": self._system["command"][2][0]["gc"].pop(0)
                                 }
+                    print('gc',_gc)
                     _gc = self._process_gc(_gc)
                 except:
                     # move the command from 2 to 3
@@ -2697,6 +2699,7 @@ class Dorna(_port_usb, easy_method):
     status: 2: not a valid xyz
     """
     def _xyz_to_joint(self,xyz):
+        print('input xyz:',xyz)
         if any(xyz == None): # xyz contains None coordinate
             return {"joint": np.array([None for i in range(len(xyz))]), "status": 2}
         
@@ -2753,7 +2756,7 @@ class Dorna(_port_usb, easy_method):
         else:
             joint = np.array([teta_0, teta_1, teta_2, teta_3, teta_4])
 
-  
+        print('output:',joint)
         return {"joint": joint, "status": status}
 
     # return: np.array

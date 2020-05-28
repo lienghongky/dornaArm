@@ -1,6 +1,6 @@
 idFactory:
-  issuedIdCount: 23
-  lastId: 23
+  issuedIdCount: 38
+  lastId: 38
 positions:
 - description: touch tools
   id: 8
@@ -12,63 +12,125 @@ positions:
   - -45.0
   - 0.0
   space: joint
-- description: before picking
-  id: 18
-  name: approchPick
+- description: at 0degreeUp
+  id: 25
+  name: upHigh0
   position:
-  - -29.9999
-  - 19.2253
-  - -66.08130000000006
-  - -40
+  - 0
+  - 90.00001
+  - -90
+  - 0
   - 0
   space: joint
-- description: picking
-  id: 19
+- description: at position up and 90 degree
+  id: 26
+  name: upHigh90
+  position:
+  - 90
+  - 90.00001
+  - -90
+  - 0
+  - 0
+  space: joint
+- description: at pick position up high
+  id: 28
+  name: pickUp
+  position:
+  - -30.00002374753169
+  - 35.87541187973376
+  - -64.66137867746077
+  - -58
+  - 0
+  space: joint
+- description: pick pose at -30
+  id: 30
   name: pick
   position:
-  - -29.99993556149966
-  - 14.83306529451053
-  - -63.99593222302707
-  - -37.693143071483455
+  - -30.000041552445136
+  - 20.059501719897494
+  - -65.35978125303728
+  - -42.409320466860216
   - 0
   space: joint
-- description: droping
-  id: 20
-  name: drop
+- description: drop at 90
+  id: 31
+  name: dropping
   position:
-  - 45
-  - 15.594595733309138
-  - -86.95632642201741
-  - -15.494279311291715
+  - 90
+  - 23.44848967385291
+  - -99.08805229642893
+  - -12.496347377423977
   - 0
   space: joint
-- description: pullBack
-  id: 21
-  name: pullBack
+- description: dropLow at 90
+  id: 32
+  name: dropLow
   position:
-  - 45
-  - 22.347850399110087
-  - -90.59196423857858
-  - -18.611896160531515
+  - 90
+  - 35.0525250607655
+  - -102.73469261716045
+  - -20.45374244360505
   - 0
   space: joint
-- description: ''
-  id: 22
-  name: topOfRing
+- description: mid height at 0
+  id: 33
+  name: mid0
   position:
   - 0
-  - 32.38975474594324
-  - -52.7935587052727
-  - -66.45220604067055
+  - 63.988984746269914
+  - -129.45240579431533
+  - 65.4634210480454
   - 0
   space: joint
-- description: touchTheRing
-  id: 23
-  name: touchTheRing
+- description: Set_io or trigger Pi GPIO
+  gpio:
+    pin: 21
+    value: 1
+  id: 35
+  name: gpio21_ON
   position:
   - 0
-  - 24.81364814475622
-  - -56.28290162126345
-  - -55.38675652349277
+  - 0
+  - 0
+  - 0
+  - 0
+  space: joint
+- description: Set_io or trigger Pi GPIO
+  gpio:
+    pin: 21
+    value: 0
+  id: 36
+  name: gpio21_OFF
+  position:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  space: joint
+- description: Set_io or trigger Pi GPIO
+  gpio:
+    pin: 16
+    value: 0
+  id: 37
+  name: gpio16_OFF
+  position:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  space: joint
+- description: Set_io or trigger Pi GPIO
+  gpio:
+    pin: 16
+    value: 1
+  id: 38
+  name: gpio16_ON
+  position:
+  - 0
+  - 0
+  - 0
+  - 0
   - 0
   space: joint

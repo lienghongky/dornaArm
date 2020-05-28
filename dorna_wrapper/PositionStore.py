@@ -20,7 +20,7 @@ class Position:
     SPACE_JOINT = 'joint'
     SPACE_XYZ = 'xyz'
 
-    def __init__(self,name,position,description,space='joint'):
+    def __init__(self,name,position,description,space='joint',gpio=None):
 
         """
         CLASS DEFINING A POSE IN JOINT SPACE
@@ -30,11 +30,13 @@ class Position:
         """
 
         # TODO add type info (joint or xyz) and any other descriptors.
+        
         self.name = name
         self.space=space # 'joint' space or 'xyz' space 
         self.position=position
         self.description=description
         self.path = self.PATH_JOINT if space == self.SPACE_JOINT else self.PATH_LINE
+        self.gpio = gpio
 
 
 class PositionStore:
@@ -91,7 +93,7 @@ class PositionStore:
     def getPostion(self,name):
         for pos in self.getAllPositions():
             if pos['name'] == name:
-                return Position(name,pos['position'],pos['description'],pos['space'])
+                return Position(name,pos['position'],pos['description'],pos['space'],pos.get('gpio',None))
         return None
     def getPostionById(self,i):
         for pos in self.getAllPositions():
@@ -101,18 +103,20 @@ class PositionStore:
                     position = pos.get('position',[])
                     des = pos.get('description','')
                     space = pos.get('space','joint')
-                    return Position(name,position,des,space)
+                    gpio = pos.get('gpio',None)
+                    return Position(name,position,des,space,gpio)
         return None
     def updateList(self,newList):
         self.saveFile(self.getFileTemplate(newList))
         
-    def save(self,name,position,description,space):
+    def save(self,name,position,description,space,gpio=None):
         newId = self.getNewId()
         tempPos = {'id':newId,
                    'name':name,
                    'position':position,
                    'description':description,
-                   'space':space
+                   'space':space,
+                   'gpio':gpio
                    }
         if os.path.isfile(self.positionPath):
             self.positions = self.getAllPositions()
@@ -159,13 +163,14 @@ class PositionStore:
         else:
            print(ID," position not found!")
            return -1
-    def update(self,name,position=None,description=None,space=None):
+    def update(self,name,position=None,description=None,space=None,gpio=None):
         for pos in self.getAllPositions():
             if pos['name'] == name:
                 tempPos = pos
                 tempPos['position'] = position if position != None else pos['position']
                 tempPos['description'] = description if description != None else pos['description']
                 tempPos['space'] = space if space != None else pos['space']
+                tempPos['gpio'] = gpio if gpio != None else gpio.get('gpio',None)
                 index = self.positions.index(pos)
                 self.positions[index] = tempPos
                 self.updateList(self.positions)
@@ -173,7 +178,7 @@ class PositionStore:
                 return 1
         print(name," not found!")
         return -1
-    def updateWithId(self,ID,name,position=None,description=None,space=None):
+    def updateWithId(self,ID,name,position=None,description=None,space=None,gpio=None):
         for pos in self.getAllPositions():
             if pos['id'] == ID:
                 tempPos = pos
@@ -181,6 +186,7 @@ class PositionStore:
                 tempPos['position'] = position if position != None else pos['position']
                 tempPos['description'] = description if description != None else pos['description']
                 tempPos['space'] = space if space != None else pos['space']
+                tempPos['gpio'] = gpio if gpio != None else gpio.get('gpio',None)
                 index = self.positions.index(pos)
                 self.positions[index] = tempPos
                 self.updateList(self.positions)

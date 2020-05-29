@@ -1,3 +1,9 @@
+command_groups:
+- cmds:
+  - 8
+  - 25
+  - 26
+  name: abc
 idFactory:
   issuedIdCount: 38
   lastId: 38

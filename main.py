@@ -34,6 +34,19 @@ def getPosition():
     print("updating ",respose)
     return make_response(json.dumps(respose),200)
 
+@app.route('/save_command_group',methods=['POST'])
+def save_command_group():
+    data = request.json
+    print("goto ",data)
+    ids = data.get('ids',[])
+    name = data.get('name','name')
+    arm.positionStore.saveGroup(name,ids)
+    return  resposePositions()
+@app.route('/get_command_groups',methods=['GET'])
+def get_command_groups():
+    cmd_groups = arm.positionStore.getCommandGroups()
+    respose = {'success':True,'data':{'command_groups':cmd_groups}}
+    return make_response(json.dumps(respose),200)
 @app.route('/update',methods=['POST'])
 def update():
     json = request.json
@@ -57,6 +70,13 @@ def delete(id):
 def gotoPosition(id):
     print("goto ",id)
     arm.goToPositionID(id)
+    return  resposePositions()
+@app.route('/goto_multi_positions',methods=['POST'])
+def goto_Multi_Positions():
+    data = request.json
+    print("goto ",data)
+    ids = data.get('ids',[])
+    arm.goToMultiPositionIDs(ids)
     return  resposePositions()
 @app.route('/grip',methods=['POST'])
 def grip():
@@ -109,6 +129,13 @@ def connect():
     return resposePositions()
 
 #### PAGE ROUTE
+@app.route('/stack',methods=['GET','POST'])
+def stack():
+    #arm.connect()
+    positions = arm.positionStore.getAllPositions()
+    posCount = len(positions)
+    config = json.loads(arm.robot.config())
+    return render_template('stack.html',posCount=posCount,positions=positions,config=config)
 @app.route('/',methods=['GET','POST'])
 def index():
     #arm.connect()

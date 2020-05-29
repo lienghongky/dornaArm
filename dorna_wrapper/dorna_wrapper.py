@@ -149,6 +149,7 @@ class Arm:
                     self.robot.set_io({pin:value})
                 else:
                     GPIO.output(pin, {0:False,1:True}[value])
+                self.waitFor()
                 return 'Set Io: '+str(pin)+' value: '+str(value)
         print(gpio)
         cmd = self.getMovementCommand(pose,speed=speed)
@@ -175,6 +176,7 @@ class Arm:
                         self.robot.set_io({pin:value})
                     else:
                         GPIO.output(pin, {0:False,1:True}[value])
+                    self.waitFor()
                     print('Set Io: '+str(pin)+' value: '+str(value))
                     continue
             
@@ -227,6 +229,14 @@ class Arm:
             time.sleep(0.1)
             continue
 
+        return
+    def waitFor(self,duration=2):
+
+        """
+        RETURN ON COMPLETION OF THE CURRENT TASK QUEUE
+        """
+        time.sleep(duration)
+        print('Done waiting for ',duration)
         return
     
     def getState(self):

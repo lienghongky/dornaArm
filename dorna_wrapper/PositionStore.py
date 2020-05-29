@@ -51,13 +51,15 @@ class PositionStore:
             self.positions = fileData['positions'] if fileData['positions'] else []
             self.idFactory = fileData['idFactory'] if fileData['idFactory'] else {'lastId':0,
                               'issuedIdCount':0}
-            self.saveFile(self.getFileTemplate(self.positions,self.idFactory))
+            self.command_groups = fileData.get('command_groups',[])
+            self.saveFile(self.getFileTemplate(self.positions,self.idFactory,self.command_groups))
             print(self.loadFile())
         else :
             self.positions =  []
             self.idFactory =  {'lastId':0,
                               'issuedIdCount':0}
-            self.saveFile(self.getFileTemplate(self.positions,self.idFactory))
+            self.command_groups = []
+            self.saveFile(self.getFileTemplate(self.positions,self.idFactory,self.command_groups))
             print(self.loadFile())
             
     def loadFile(self):
@@ -70,9 +72,10 @@ class PositionStore:
         with open(self.positionPath,'w') as stream:
             yaml.dump(fileTemplate,stream)
             
-    def getFileTemplate(self,positions,idFactory=None):
+    def getFileTemplate(self,positions,idFactory=None,command_groups=None):
         template = {'positions':positions,
-                    'idFactory':(idFactory if idFactory != None else self.idFactory)}
+                    'idFactory':(idFactory if idFactory != None else self.idFactory),
+                    'command_groups':command_groups if command_groups != None else self.command_groups}
         return template
     def getNewId(self):
         return self.idFactory['lastId']+1
@@ -88,6 +91,15 @@ class PositionStore:
         if fileData['positions'] != None:
             self.positions = fileData['positions']
             return self.positions
+        else:
+            return []
+    def getCommandGroups(self):
+        fileData = self.loadFile()
+        if fileData == None:
+            return []
+        if fileData['command_groups'] != None:
+            self.command_groups = fileData['command_groups']
+            return self.command_groups
         else:
             return []
     def getPostion(self,name):
@@ -108,6 +120,8 @@ class PositionStore:
         return None
     def updateList(self,newList):
         self.saveFile(self.getFileTemplate(newList))
+    def updateCommandGroups(self,newList):
+        self.saveFile(self.getFileTemplate(self.positions,None,newList))
         
     def save(self,name,position,description,space,gpio=None):
         newId = self.getNewId()
@@ -194,6 +208,42 @@ class PositionStore:
                 return 1
         print(name," not found!")
         return -1
+    def saveGroup(self,name,cmds):
+        newId = self.getNewId()
+        tempPos = {
+                   'name':name,
+                   'cmds':cmds
+                   }
+        if os.path.isfile(self.positionPath):
+            self.command_groups = self.getCommandGroups()
+            if self.command_groups:
+                for pos in self.command_groups:
+                    if pos['name'] == name:
+                        print("Name is already existed, try other name!")
+                        return -1
+                self.command_groups.append(tempPos)
+                self.updateCommandGroups(self.command_groups)
+                
+                print(tempPos," is saved!")
+                return 1
+   
+       #In the case where there no file found create new file and save that postion
+        self.updateCommandGroups([tempPos])
+        print(tempPos," is saved!")
+        return 1
+    def deleteGroup(self,name):
+        if os.path.isfile(self.positionPath):
+                for pos in self.getCommandGroups():
+                    if pos['name'] == name:
+                        self.command_groups.remove(pos)
+                        self.updateCommandGroups(self.positions)
+                        print(name," deleted!")
+                        return 1
+                print(name," position not found!")
+                return -1
+        else:
+           print(name," position not found!")
+           return -1
     def showAllPositions(self):
         print(tabulate(self.getAllPositions(),
                  headers='keys',tablefmt='fancy_grid'))

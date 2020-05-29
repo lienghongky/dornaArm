@@ -1,7 +1,6 @@
 
     {% extends "layout.html"%}
     {% block content %}
-
     <style>
         .arrow{
             padding: 10px;
@@ -18,6 +17,9 @@
         }
         .row {
             margin: 0;
+        }
+        #command_table td:hover{
+            cursor: move;
         }
         
     </style>
@@ -74,6 +76,52 @@
                     <div class="pt-2">
                         <button id="btn_grip" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Grip</button>
                     </div>
+                    <div class="card mt-4">
+                        <div class="card-header" id="headingThree">
+                          <h5 class="mb-0 flex justify-between">
+                            <button class="btn btn-link collapsed text-blue-700" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.17 3.83c-.27-.27-.47-.55-.63-.88-.16-.31-.27-.66-.34-1.02-.58.33-1.16.7-1.73 1.13-.58.44-1.14.94-1.69 1.48-.7.7-1.33 1.81-1.78 2.45H3L0 10h3l2-2c-.34.77-1.02 2.98-1 3l1 1c.02.02 2.23-.64 3-1l-2 2v3l3-3v-3c.64-.45 1.75-1.09 2.45-1.78.55-.55 1.05-1.13 1.47-1.7.44-.58.81-1.16 1.14-1.72-.36-.08-.7-.19-1.03-.34a3.39 3.39 0 01-.86-.63zM16 0s-.09.38-.3 1.06c-.2.7-.55 1.58-1.06 2.66-.7-.08-1.27-.33-1.66-.72-.39-.39-.63-.94-.7-1.64C13.36.84 14.23.48 14.92.28 15.62.08 16 0 16 0z"></path></svg>
+                            </button>
+                            <div class="flex">
+                                <div class="btn-group dropup mx-1">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Save
+                                    </button>
+                                    <div class="dropdown-menu p-2 w-90">
+                                      <!-- Dropdown menu links --> 
+                                      <input id="position_group_name" type="text" class="form-control my-2" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                      <button id="btn_saves" type="button" class="btn btn-success mx-1">Save</button>
+                                    </div>
+                                  </div>
+                                
+                                <button id="btn_gos" type="button" class="btn btn-primary">Go</button>
+                            </div>
+                          </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse show p-0" aria-labelledby="headingThree" >
+                          <div class="card-body p-0">
+                              <div class="p-0">
+        
+                                  <table class="table table-striped table-hover m-0" id="command_table">
+                                     <thead class="thead-dark">
+                                      <tr>
+                                          <th scope="col">ID</th>
+                                          <th scope="col">NAME</th>  
+                                          <th scope="col">CMD</th>
+                                          <!-- <th scope="col">Position</th>
+                                          <th scope="col">(Joint/XYZ)</th>
+                                          <th scope="col">Description</th> -->
+                                        </tr>
+                                     </thead>
+                                     <tbody id="cmds_tbody">
+                                        
+                                     </tbody>
+                                 </table>
+                             
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div id="content" class="col scrollable-wrapper p-0">
@@ -83,128 +131,157 @@
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"></path></svg>
                         </button>
                     </div>
-                    <div class="flex p-4">
-                        <div class="w-1/2 m-2 row flex justify-center p-4 bg-gray-700 rounded-lg">
-                            <div class="p-1 col-md-12">
-                                  <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="movement" id="movement" value="1" checked>
-                                    <label class="form-check-label text-white" for="movement">
-                                      Relative
-                                    </label>
-                                  </div>
-                                  <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="movement" id="movement1" value="0">
-                                    <label class="form-check-label text-white" for="movement1">
-                                      Absolute
-                                    </label>
-                                  </div>
-                                <label class="text-white" for="xyzRange">xyz Range :</label>
-                                <label id="xyzRangeValue" class="text-white value">50</label>
-                                <input type="range" class="custom-range" id="xyzRange" value="50">
+                    <div id="accordion">
+                        <div class="card">
+                          <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Arm Controller:
+                              </button>
+                            </h5>
+                          </div>
+                      
+                          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="flex p-4">
+                                    <div class="w-1/2 m-2 row flex justify-center p-4 bg-gray-700 rounded-lg">
+                                        <div class="p-1 col-md-12">
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="movement" id="movement" value="1" checked>
+                                                <label class="form-check-label text-white" for="movement">
+                                                  Relative
+                                                </label>
+                                              </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="movement" id="movement1" value="0">
+                                                <label class="form-check-label text-white" for="movement1">
+                                                  Absolute
+                                                </label>
+                                              </div>
+                                            <label class="text-white" for="xyzRange">xyz Range :</label>
+                                            <label id="xyzRangeValue" class="text-white value">50</label>
+                                            <input type="range" class="custom-range" id="xyzRange" value="50">
+                                        </div>
+                                        <div class="col-md-12 flex justify-center">
+                                            <button id="x+" data-id='x' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2">   X+   </button>
+                                            <button id="x-" data-id='x' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2"> X- </button>
+                                        </div>
+                                        <div class="col-md-4 flex justify-end">
+                                            <button id="y+" data-id='y' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full">  Y+  </button>
+                                        </div>
+                                        <div class="col-md-4 flex items-center ">
+                                            <div class="input-group input-group-md">
+                                                <input id="angle_j0" placeholder="At angle of:" type="number" class="form-control" aria-label="Small" value="0" aria-describedby="inputGroup-sizing-sm">
+                                              </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4 flex justify-start">
+                                            <button id="y-" data-id='y' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Y- </button>
+                                        </div>
+                                        <div class="col-md-6 row">
+                                            <button id="z+" data-id='z' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z+ </button>
+                                            <button id="z-" data-id='z' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z- </button>
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="w-1/2 m-2 row flex flex-grow justify-center p-4 bg-gray-700 rounded-lg">
+                                        <div class="p-1 col-md-12">
+                                            <label class="text-white" for="jointRange">JointRange :</label>
+                                            <label id="jointRangeValue" class="text-white value">10</label>
+                                            <input type="range" class="custom-range" id="jointRange" value="10">
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j0' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0+ </button>
+                                            <button data-id='j0' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j1' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1+ </button>
+                                            <button data-id='j1' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j2' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2+ </button>
+                                            <button data-id='j2' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j3' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3+ </button>
+                                            <button data-id='j3' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j4' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4+ </button>
+                                            <button data-id='j4' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4- </button>
+                                        </div>
+                                    
+                                    </div>
+                                </div> 
                             </div>
-                            <div class="col-md-12 flex justify-center">
-                                <button id="x+" data-id='x' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2">   X+   </button>
-                                <button id="x-" data-id='x' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2"> X- </button>
-                            </div>
-                            <div class="col-md-4 flex justify-end">
-                                <button id="y+" data-id='y' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full">  Y+  </button>
-                            </div>
-                            <div class="col-md-4 flex items-center ">
-                                <div class="input-group input-group-md">
-                                    <input id="angle_j0" placeholder="At angle of:" type="number" class="form-control" aria-label="Small" value="0" aria-describedby="inputGroup-sizing-sm">
-                                  </div>
-                            </div>
-                            
-                            <div class="col-md-4 flex justify-start">
-                                <button id="y-" data-id='y' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Y- </button>
-                            </div>
-                            <div class="col-md-6 row">
-                                <button id="z+" data-id='z' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z+ </button>
-                                <button id="z-" data-id='z' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z- </button>
-                            </div>
-                        
+                          </div>
                         </div>
-                        <div class="w-1/2 m-2 row flex flex-grow justify-center p-4 bg-gray-700 rounded-lg">
-                            <div class="p-1 col-md-12">
-                                <label class="text-white" for="jointRange">JointRange :</label>
-                                <label id="jointRangeValue" class="text-white value">10</label>
-                                <input type="range" class="custom-range" id="jointRange" value="10">
+                        <div class="card">
+                          <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                All Position & command:
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                          <th colspan="5">Saved Positionn</th>
+                                          <th>
+                                            <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              SAVE CURRENT POSITION
+                                            </button>
+                                            <div class="dropdown-menu p-2" aria-labelledby="dropdownMenu2">
+                                                <button id="btn_add_joint" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >JOINT POSITION</button>
+                                                <button id="btn_add_xyz" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >XYZ POSITION</button>
+                                            </div>
+                                          </div></th>
+            
+                                        </tr>
+                                      </thead>
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">CMD</th>  
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">(Joint/XYZ)</th>
+                                        <th scope="col">Description</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    {%for i in range(0,posCount)%}
+                                    
+                                      <tr class="add-click" data-id={{i}}>
+                                            <th scope="row">
+                                            <button id="btn_go" data-id={{positions[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
+                                            <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#myModal" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
+                                            <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
+            
+                                             
+                                            </th>
+                                            <td>{{positions[i].get('id','n/a')}}</td>
+                                            <td>{{positions[i].get('name','n/a')}}</td>
+                                            <td>{{positions[i].get('position','n/a')}}</td>
+                                            <td>{{positions[i].get('space','n/a')}}</td>
+                                            <td>{{positions[i].get('description','n/a')}}</td>
+                                        
+                                      </tr>
+                                      {%endfor%}
+                                    </tbody>
+                                </table>  
                             </div>
-                            <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
-                                <button data-id='j0' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0+ </button>
-                                <button data-id='j0' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0- </button>
-                            </div>
-                            <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
-                                <button data-id='j1' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1+ </button>
-                                <button data-id='j1' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1- </button>
-                            </div>
-                            <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
-                                <button data-id='j2' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2+ </button>
-                                <button data-id='j2' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2- </button>
-                            </div>
-                            <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
-                                <button data-id='j3' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3+ </button>
-                                <button data-id='j3' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3- </button>
-                            </div>
-                            <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
-                                <button data-id='j4' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4+ </button>
-                                <button data-id='j4' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4- </button>
-                            </div>
-                        
+                          </div>
                         </div>
                     </div>
-                    <table class="table table-hover">
-                        <thead class="thead-dark">
-                            <tr>
-                              <th colspan="5">Saved Positionn</th>
-                              <th>
-                                <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                  SAVE CURRENT POSITION
-                                </button>
-                                <div class="dropdown-menu p-2" aria-labelledby="dropdownMenu2">
-                                    <button id="btn_add_joint" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >JOINT POSITION</button>
-                                    <button id="btn_add_xyz" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >XYZ POSITION</button>
-                                </div>
-                              </div></th>
-
-                            </tr>
-                          </thead>
-                        <thead>
-                          <tr>
-                            <th scope="col">CMD</th>  
-                            <th scope="col">ID</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">(Joint/XYZ)</th>
-                            <th scope="col">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                        {%for i in range(0,posCount)%}
-                        
-                          <tr>
-                                <th scope="row">
-                                <button id="btn_go" data-id={{positions[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
-                                <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#myModal" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
-                                <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
-
-                                 
-                                </th>
-                                <td>{{positions[i].get('id','n/a')}}</td>
-                                <td>{{positions[i].get('name','n/a')}}</td>
-                                <td>{{positions[i].get('position','n/a')}}</td>
-                                <td>{{positions[i].get('space','n/a')}}</td>
-                                <td>{{positions[i].get('description','n/a')}}</td>
-                            
-                          </tr>
-                          {%endfor%}
-                        </tbody>
-                      </table>
-                 
-                    
                 </div>
+
             </div>
+            
         </div>
 
 
@@ -271,10 +348,35 @@
         </div>
     
 
-
+  
+    <script type="text/javascript">
+        var fixHelperModified = function(e, tr) {
+            var $originals = tr.children();
+            var $helper = tr.clone();
+            $helper.children().each(function(index) {
+                $(this).width($originals.eq(index).width())
+            });
+            return $helper;
+        },
+		updateIndex = function(e, ui) {
+            var cmds = [...commands]
+			$('tr', ui.item.parent()).each(function (i) {
+                var oldIndex = $(this).data('id')
+                cmds[i] = commands[oldIndex]
+                $(this).data('id',i)
+				
+			});
+            commands = cmds
+		};
+            $('#cmds_tbody').sortable({
+                helper: fixHelperModified,
+		        stop: updateIndex
+                });
+    </script>
     <script>
         var positions = {{ positions|tojson }};
         var config = {{ config|tojson }}
+        var commands = []
         $(document).on('input', '#xyzRange', function() {
             $('#xyzRangeValue').html( $(this).val() );
         });
@@ -333,13 +435,58 @@
                         }
                     })
             }
-
             
+        })
+        $(document).on("click", ".add-click", function (pos) {
             
-            
-            
-            
-            
+             var index = $(this).data('id');
+             addCmd(index)
+             updateCmdsTable()
+             window.location.href='#cmds-tbody'
+            });
+        $(document).on("click", ".remove-click", function (pos) {
+            var index = $(this).data('id');
+            removeCmd(index)
+            updateCmdsTable()
+           });
+        $('#btn_saves').on('click',function(){
+            var ids = []
+            var name = $('#position_group_name').val()
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids,name:name}
+            $.ajax({
+                type:'POST',
+                url:'/save_command_group',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+        });
+        $('#btn_gos').on('click',function(){
+            var ids = []
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids}
+            $.ajax({
+                type:'POST',
+                url:'/goto_multi_positions',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
         })
 
             $(document).on("click", ".go-click", function (pos) {
@@ -630,6 +777,27 @@
                 })
             
             }
+
+        function addCmd(index){
+            var cmd = positions[index]
+                commands.push(cmd)
+             
+        }
+        function removeCmd(index){
+            commands.splice(index, 1);
+        }
+        function updateCmdsTable(){
+            var rows = ''
+           for (i=0;i<commands.length;i++){
+               var cmd = commands[i]
+                var row ='  <tr data-id='+i+'><th scope="row">'+cmd.id+
+                '</th><td>'+cmd.name+
+                '</td><td><a data-id='+i+' class="remove-click min-w-full px-1 py-1 btn btn-danger text-white" >X</a></td></tr>'
+                rows += row
+           }
+            $('#cmds_tbody').html(rows)
+            
+        }
 
         // document.getElementById("btnToggle").onclick = function(){
         //     const currentVisibility = document.getElementById("leftBar").style.display

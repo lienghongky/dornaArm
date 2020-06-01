@@ -1,17 +1,6 @@
-<!doctype html>
-<html>
-    <head>
-        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-        <link rel="stylesheet" href="css/roundslider.min.css">
-        <script src="js/roundslider.min.js"></script>
 
-        <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-    </head>
+    {% extends "layout.html"%}
+    {% block content %}
     <style>
         .arrow{
             padding: 10px;
@@ -20,145 +9,932 @@
         .value{
             color:red;
         }
+    
+        .scrollable-wrapper {
+            height: 100%;
+            overflow-y: scroll;
+      
+        }
+        .row {
+            margin: 0;
+        }
+        #command_table td:hover{
+            cursor: move;
+        }
+        
     </style>
-    <body>
-        <div class="m-0 p-0 m-0">
-            <h4 class="mt-4 text-center text-5xl">Dorna Arm</h4>
-            <div class="row ">
-                <div class="col-md-3 bg-gray-700 p-4">
-                    <h4 class="text-center p-4 text-white"> ROBOT</h4>
-                    <div class="p-4 row">
-                        <p class=" col-sm-6 text-sm text-white">Connect to robot:</p>
-                        <button type="button" class="col-sm-6 btn btn-primary">Connect</button>
+        <div class="row" style="height: 92%;">
+            <!-- LEFT SIDE BAR VIEW -->
+            <div id="leftBar" class="col-3 scrollable-wrapper p-0">
+                <div class="col-md-12  bg-gray-700 p-4">
+                    
+                    <div class="row">
+                            <h4 class="text-center p-2 text-white self-center"> ROBOT</h4> 
+                        <div id="state_loading">
+                            <div class="spinner-grow text-success" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                          <div class="spinner-grow text-danger" role="status">
+                            <span class="sr-only">Loading...</span>
+                          </div> 
+                        </div>    
                     </div>
+                    <p id="connection"class=" col-sm-6 text-sm text-white">Connect:</p>
+                     <button type="button" id='btn_connect' class="col-sm-6 btn btn-success m-2">Connect</button>
+                    <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
+                    <button type="button" id='btn_refresh' class="col-sm-6 btn btn-primary m-2">REFRESH</button>
                     <div class="progress row m-2">
-                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                        <div id="loading" class="progress-bar progress-bar-striped bg-warning " role="progressbar" style="width: 0%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                     <div class="p-4 rounded-lg rounded-l-none bg-gray-600">
-                        <div class="p-1">
-                            <label class="text-white" for="joint0">Joint 0 :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="joint0">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="joint1">Joint 1 :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="joint1">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="joint2">Joint 2 :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="joint2">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="joint3">Joint 3 :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="joint3">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="joint4">Joint 4 :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="joint4">
-                        </div>
-                        <div class="pt-4">
-                            <button type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
+                        {%for j in ['J0','J1','J2','J3','J4']%}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">{{j}}</span>
+                            </div>
+                            <input type="number" class="form-control" step="0.01" id="{{j}}">
+                         
+                          </div>
+                        {%endfor%}
+                        <div class="pt-2">
+                            <button id="btn_send_joint" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
                         </div>
                     </div>
                     <div class="mt-4 p-4 rounded-lg .rounded-l-none bg-gray-600">
-                        <div class="p-1">
-                            <label class="text-white" for="x">X axis :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="x">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="y">Y axis: </label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="y">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="z">Z axis :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="z">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="a">A (Joint 3) :</label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="a">
-                        </div>
-                        <div class="p-1">
-                            <label class="text-white" for="b">B (Joint 4): </label>
-                            <label class="text-white value">140</label>
-                            <input type="range" class="custom-range" id="b">
-                        </div>
-                        <div class="pt-4">
-                            <button type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
+                        {%for a in ['X','Y','Z','A','B']%}
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">{{a}}</span>
+                            </div>
+                            <input type="number" class="form-control" step="0.01" id="{{a}}">
+                         
+                          </div>
+                        {%endfor%}
+                        <div class="pt-2">
+                            <button id="btn_send_xyz" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Send</button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-9">
-                    <table class="table table-hover table-dark">
-                        <thead>
-                            <tr>
-                              <th colspan="2">Saved Positionn</th>
-                            </tr>
-                          </thead>
-                        <thead>
-                          <tr>
-                            <th scope="col">CMD</th>  
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Position</th>
-                            <th scope="col">(Joint/XYZ)</th>
-                            <th scope="col">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <th scope="row"><button type="button" class="min-w-full pl-1 pr-1 btn btn-primary">GO</button></th>
-                            <td>1</td>
-                            <td>PICK</td>
-                            <td>(12, 12, 24, 5, 5, 0)</td>
-                            <td>Joint</td>
-                            <td>N/A</td>
-                          </tr>
-                          <tr>
-                            <th scope="row"><button type="button" class="min-w-full pl-1 pr-1 btn btn-primary">GO</button></th>
-                            <td>2</td>
-                            <td>DROP</td>
-                            <td>(12, 12, 24, 5, 5, 0)</td>
-                            <td>XYZ</td>
-                            <td>@mdo</td>
-      
-                          </tr>
-                          <tr>
-                            <th scope="row"><button type="button" class="min-w-full pl-1 pr-1 btn btn-primary">GO</button></th>
-                            <td>3</td>
-                            <td>HOME</td>
-                            <td>(12, 12, 24, 5, 5, 0)</td>
-                            <td>XYZ</td>
-                            <td>@mdo</td>
-      
-                          </tr>
-                        </tbody>
-                      </table>
-                    <div class="row flex justify-center">
-                        <div class="col-md-12 flex justify-center">
-                            <button type="button" class="btn btn-primary arrow">   UP   </button>
-                        </div>
-                        <div class="col-md-6 flex justify-end">
-                            <button type="button" class="btn btn-primary arrow">  LEFT  </button>
-                        </div>
-                        <div class="col-md-6 flex justify-start">
-                            <button type="button" class="btn btn-primary arrow"> RIGHT </button>
-                        </div>
-                        <div class="col-md-12 flex justify-center">
-                            <button type="button" class="btn btn-primary arrow"> DOWN </button>
-                        </div>
-                    
+                    <div class="pt-2">
+                        <button id="btn_grip" type="button" class="min-w-full pl-4 pr-4 btn btn-primary">Grip</button>
                     </div>
-                    
+                    <div class="card mt-4">
+                        <div class="card-header" id="headingThree">
+                          <h5 class="mb-0 flex justify-between">
+                            <button class="btn btn-link collapsed text-blue-700" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M12.17 3.83c-.27-.27-.47-.55-.63-.88-.16-.31-.27-.66-.34-1.02-.58.33-1.16.7-1.73 1.13-.58.44-1.14.94-1.69 1.48-.7.7-1.33 1.81-1.78 2.45H3L0 10h3l2-2c-.34.77-1.02 2.98-1 3l1 1c.02.02 2.23-.64 3-1l-2 2v3l3-3v-3c.64-.45 1.75-1.09 2.45-1.78.55-.55 1.05-1.13 1.47-1.7.44-.58.81-1.16 1.14-1.72-.36-.08-.7-.19-1.03-.34a3.39 3.39 0 01-.86-.63zM16 0s-.09.38-.3 1.06c-.2.7-.55 1.58-1.06 2.66-.7-.08-1.27-.33-1.66-.72-.39-.39-.63-.94-.7-1.64C13.36.84 14.23.48 14.92.28 15.62.08 16 0 16 0z"></path></svg>
+                            </button>
+                            <div class="flex">
+                                <div class="btn-group dropup mx-1">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      Save
+                                    </button>
+                                    <div class="dropdown-menu p-2 w-90">
+                                      <!-- Dropdown menu links --> 
+                                      <input id="position_group_name" type="text" class="form-control my-2" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                                      <button id="btn_save_group" type="button" class="btn btn-success mx-1">Save</button>
+                                    </div>
+                                  </div>
+                                
+                                <button id="btn_gos" type="button" class="btn btn-primary">Go</button>
+                            </div>
+                          </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse show p-0" aria-labelledby="headingThree" >
+                          <div class="card-body p-0">
+                              <div class="p-0">
+        
+                                  <table class="table table-striped table-hover m-0" id="command_table">
+                                     <thead class="thead-dark">
+                                      <tr>
+                                          <th scope="col">ID</th>
+                                          <th scope="col">NAME</th>  
+                                          <th scope="col">CMD</th>
+                                          <!-- <th scope="col">Position</th>
+                                          <th scope="col">(Joint/XYZ)</th>
+                                          <th scope="col">Description</th> -->
+                                        </tr>
+                                     </thead>
+                                     <tbody id="cmds_tbody">
+                                        
+                                     </tbody>
+                                 </table>
+                             
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <!-- END LEFT SIDE BAR VIEW -->
+
+            <!-- RIGHT BIG CONTENT VIEW -->
+            <div id="content" class="col scrollable-wrapper p-0">
+                <div class="col-md-12 m-0 p-0">
+                    <div class="row bg-dark">
+                        <button class="btn btn-outline-primary m-2" id="btnToggle">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 16" width="12" height="16"><path fill-rule="evenodd" d="M11.41 9H.59C0 9 0 8.59 0 8c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zm0-4H.59C0 5 0 4.59 0 4c0-.59 0-1 .59-1H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1h.01zM.59 11H11.4c.59 0 .59.41.59 1 0 .59 0 1-.59 1H.59C0 13 0 12.59 0 12c0-.59 0-1 .59-1z"></path></svg>
+                        </button>
+                    </div>
+                    <div id="accordion">
+                        <div class="card">
+                          <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Arm Controller:
+                              </button>
+                            </h5>
+                          </div>
+                      
+                          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="flex p-4">
+                                    <div class="w-1/2 m-2 row flex justify-center p-4 bg-gray-700 rounded-lg">
+                                        <div class="p-1 col-md-12">
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="movement" id="movement" value="1" checked>
+                                                <label class="form-check-label text-white" for="movement">
+                                                  Relative
+                                                </label>
+                                              </div>
+                                              <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="movement" id="movement1" value="0">
+                                                <label class="form-check-label text-white" for="movement1">
+                                                  Absolute
+                                                </label>
+                                              </div>
+                                            <label class="text-white" for="xyzRange">xyz Range :</label>
+                                            <label id="xyzRangeValue" class="text-white value">50</label>
+                                            <input type="range" class="custom-range" id="xyzRange" value="50">
+                                        </div>
+                                        <div class="col-md-12 flex justify-center">
+                                            <button id="x+" data-id='x' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2">   X+   </button>
+                                            <button id="x-" data-id='x' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-1/2"> X- </button>
+                                        </div>
+                                        <div class="col-md-4 flex justify-end">
+                                            <button id="y+" data-id='y' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full">  Y+  </button>
+                                        </div>
+                                        <div class="col-md-4 flex items-center ">
+                                            <div class="input-group input-group-md">
+                                                <input id="angle_j0" placeholder="At angle of:" type="number" class="form-control" aria-label="Small" value="0" aria-describedby="inputGroup-sizing-sm">
+                                              </div>
+                                        </div>
+                                        
+                                        <div class="col-md-4 flex justify-start">
+                                            <button id="y-" data-id='y' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Y- </button>
+                                        </div>
+                                        <div class="col-md-6 row">
+                                            <button id="z+" data-id='z' data-value="+1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z+ </button>
+                                            <button id="z-" data-id='z' data-value="-1" data-space="xyz" type="button" class="btnControl btn btn-primary arrow w-full"> Z- </button>
+                                        </div>
+                                    
+                                    </div>
+                                    <div class="w-1/2 m-2 row flex flex-grow justify-center p-4 bg-gray-700 rounded-lg">
+                                        <div class="p-1 col-md-12">
+                                            <label class="text-white" for="jointRange">JointRange :</label>
+                                            <label id="jointRangeValue" class="text-white value">10</label>
+                                            <input type="range" class="custom-range" id="jointRange" value="10">
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j0' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0+ </button>
+                                            <button data-id='j0' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J0- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j1' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1+ </button>
+                                            <button data-id='j1' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J1- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j2' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2+ </button>
+                                            <button data-id='j2' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J2- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j3' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3+ </button>
+                                            <button data-id='j3' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J3- </button>
+                                        </div>
+                                        <div class="w-1/3 row bg-gray-600 m-1 rounded-lg">
+                                            <button data-id='j4' data-value="+1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4+ </button>
+                                            <button data-id='j4' data-value="-1" data-space="joint" type="button" class="btnControl btn btn-primary arrow w-full"> J4- </button>
+                                        </div>
+                                    
+                                    </div>
+                                </div> 
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                          <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                              <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                All Position & command:
+                              </button>
+                            </h5>
+                          </div>
+                          <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <table class="table table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                          <th colspan="5">Saved Positionn</th>
+                                          <th>
+                                            <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                              SAVE CURRENT POSITION
+                                            </button>
+                                            <div class="dropdown-menu p-2" aria-labelledby="dropdownMenu2">
+                                                <button id="btn_add_joint" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >JOINT POSITION</button>
+                                                <button id="btn_add_xyz" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >XYZ POSITION</button>
+                                            </div>
+                                          </div></th>
+            
+                                        </tr>
+                                      </thead>
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">CMD</th>  
+                                        <th scope="col">ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Position</th>
+                                        <th scope="col">(Joint/XYZ)</th>
+                                        <th scope="col">Description</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                    {%for i in range(0,data.get('posCount'))%}
+                                    
+                                      <tr class="add-click" data-id={{i}}>
+                                            <th scope="row">
+                                            <button id="btn_go" data-id={{data.get('positions')[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
+                                            <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#myModal" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
+                                            <a href={{ url_for('delete',id = data.get('positions')[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
+            
+                                             
+                                            </th>
+                                            <td>{{data.get('positions')[i].get('id','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('name','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('position','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('space','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('description','n/a')}}</td>
+                                        
+                                      </tr>
+                                      {%endfor%}
+                                    </tbody>
+                                </table>  
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                              <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
+                                    Sequence of Commands:
+                                </button>
+                              </h5>
+                            </div>
+                            <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+                              <div class="card-body">
+                                  <table class="table table-hover">
+                                      <thead class="thead-dark">
+                                          <tr>
+                                            <th colspan="6">Saved Sequence</th>
+                                            <!-- <th>
+                                              <div class="dropdown">
+                                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                SAVE CURRENT POSITION
+                                              </button>
+                                              <div class="dropdown-menu p-2" aria-labelledby="dropdownMenu2">
+                                                  <button id="btn_add_joint" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >JOINT POSITION</button>
+                                                  <button id="btn_add_xyz" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >XYZ POSITION</button>
+                                              </div>
+                                            </div></th> -->
+              
+                                          </tr>
+                                        </thead>
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">CMD</th>  
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Positions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="command_group_tbody">
+                                      {%for i in range(0,data.get('cmdGroupsCount'))%}
+                                      
+                                        <tr class="" data-id={{i}}>
+                                              <th scope="row">
+                                              <a href={{url_for('goto_command_group',name = data.get('cmdGroups')[i].get('name','n/a'))}}}} id="btn_gos_tb" data-id={{data.get('cmdGroups')[i].get('name','n/a')}}  name='goto_button_tb' type="submit" class="gos-click px-4 mt-1 btn btn-primary">GO</a>
+                                              <a href={{ url_for('delete_command_group',name = data.get('cmdGroups')[i].get('name','n/a'))}} class=" pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
+                                              </th>
+                                              <td>{{data.get('cmdGroups',[])[i].get('name','n/a')}}</td>
+                                              <td>{{data.get('cmdGroups',[])[i].get('cmds','n/a')}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                      </tbody>
+                                  </table>  
+                              </div>
+                            </div>
+                          </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- END RIGHT BIG CONTENT VIEW -->
         </div>
-    </body>
-</html>
+
+
+    <!-- Modal For Save Postion or update Position -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable  modal-lg" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">ADD/UPDATE POSITION</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+               <form>
+                   <input name="edit_id" type="hidden" class="form-control" id="edit_id">
+                  <div class="form-group">
+                    <label for="exampleFormControlInput1">NAME</label>
+                    <input name="edit_name" type="text" class="form-control" id="edit_name" placeholder="POSITION NAME">
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group col-md-2">
+                      <label for="edit-j0">J0/X</label>
+                      <input name="edit_j0" type="number" class="form-control" id="edit_j0">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="edit-j1">J1/Y</label>
+                        <input name="edit_j1" type="number" class="form-control" id="edit_j1">
+                    </div>
+                    <div class="form-group col-md-2">
+                      <label for="edit-j2">J2/Z</label>
+                      <input name="edit_j2" type="number" class="form-control" id="edit_j2">
+                    </div>
+                     <div class="form-group col-md-2">
+                      <label for="edit-j3">J3/A</label>
+                      <input name="edit_j3" type="number" class="form-control" id="edit_j3">
+                    </div>
+                     <div class="form-group col-md-2">
+                      <label for="edit-j4">J4/B</label>
+                      <input name="edit_j4" type="number" class="form-control" id="edit_j4">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-space">SPANCE</label>
+                    <select name="edit_space" class="form-control" id="edit_space">
+                      <option>joint</option>
+                      <option>xyz</option>
+        
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="edit-description">DESCRIPTION</label>
+                    <textarea name="edit_description"class="form-control" id="edit_description" rows="3"></textarea>
+                  </div>
+                  </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button id="btn_save" type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+    <!-- Modal -->
+
+  <!-- Script for Sequan drag drop table -->
+    <script type="text/javascript">
+        var fixHelperModified = function(e, tr) {
+            var $originals = tr.children();
+            var $helper = tr.clone();
+            $helper.children().each(function(index) {
+                $(this).width($originals.eq(index).width())
+            });
+            return $helper;
+        },
+		updateIndex = function(e, ui) {
+            var cmds = [...commands]
+			$('tr', ui.item.parent()).each(function (i) {
+                var oldIndex = $(this).data('id')
+                cmds[i] = commands[oldIndex]
+                $(this).data('id',i)
+				
+			});
+            commands = cmds
+		};
+            $('#cmds_tbody').sortable({
+                helper: fixHelperModified,
+		        stop: updateIndex
+                });
+    </script>
+    <script>
+        // var cmdGroups = {{data.get('cmdGroups')|tojson}}
+        var positions = {{ data.get('positions')|tojson }};
+        var config = {{ data.get('config')|tojson }}
+        var commands = []
+        getCmdgroups()
+        // SECTION FOR MANUAL CONTROL 'Arm Controller'
+        $(document).on('input', '#xyzRange', function() {
+            $('#xyzRangeValue').html( $(this).val() );
+        });
+        $(document).on('input', '#jointRange', function() {
+            $('#jointRangeValue').html( $(this).val() );
+        });
+        $(document).on('click','.btnControl',function(){
+            var id = $(this).data('id');
+            var value = parseFloat($(this).data('value'));
+            var space = $(this).data('space');
+            var j0 = parseFloat($('#angle_j0').val());
+            if (space == 'xyz'){
+                var movement= parseInt($("input:radio[name ='movement']:checked").val());
+                var xyzRange = parseFloat($('#xyzRange').val())
+                var cmd = {}
+                cmd[id] = xyzRange*value
+                var json = {
+                            cmd:cmd,
+                            j0:j0,
+                            movement:movement
+                            }
+                
+                animate(true)
+                $.ajax({
+                    type:'POST',
+                    url:'/adjust_xyz',
+                    data:JSON.stringify(json),
+                    contentType:'application/json; charset=utf-8',
+                    dataType:'json',
+                    success:function(res){
+                        bindPositions(res)
+                        animate(false)
+                        console.log(res)
+                        
+                        }
+                    })
+
+            }else{
+                var jointRange = parseFloat($('#jointRange').val())
+                var json = {}
+                json[id] = jointRange*value
+                animate(true)
+                $.ajax({
+                    type:'POST',
+                    url:'/adjust_joint',
+                    data:JSON.stringify(json),
+                    contentType:'application/json; charset=utf-8',
+                    dataType:'json',
+                    success:function(res){
+                        bindPositions(res)
+                        animate(false)
+                        var joints = res.data.joint;
+                        $('#angle_j0').val(joints[0])
+                        console.log(res)
+                        
+                        }
+                    })
+            }
+            
+        })
+        // END SECTION FOR MANUAL CONTROL 'Arm Controller'
+
+        // SECTION FOR SAVED POSITION & COMMAND TABLE
+        $(document).on("click", ".add-click", function (pos) {
+            
+             var index = $(this).data('id');
+             addCmd(index)
+             updateCmdsTable()
+             window.location.href='#cmds-tbody'
+            });
+        $(document).on("click", ".remove-click", function (pos) {
+            var index = $(this).data('id');
+            removeCmd(index)
+            updateCmdsTable()
+           });
+        $(document).on("click", ".go-click", function (pos) {
+             var id = $(this).data('id');
+              $.ajax({
+                type:'POST',
+                url:'/goto_position/'+id,
+                data:{},
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+        });
+                 
+        $(document).on("click", ".edit-click", function (pos) {
+             var posIndex = $(this).data('id');
+             var position = positions[posIndex];
+             console.log('data >>',position);
+             console.log('data >>',position.position);
+             $('#edit_id').val(position.id)
+             $('#edit_name').val(position.name)
+             $('#edit_j0').val(position.position[0])
+             $('#edit_j1').val(position.position[1])
+             $('#edit_j2').val(position.position[2])
+             $('#edit_j3').val(position.position[3])
+             $('#edit_j4').val(position.position[4])
+             $('#edit_space').val(position.space)
+             $('#edit_space').removeAttr("disabled")
+             $('#edit_description').val(position.description)
+            });
+        $('#btn_save').on('click',function(e){
+             var id = $('#edit_id').val()
+             var name = $('#edit_name').val()
+             var j0 = parseFloat($('#edit_j0').val())
+             var j1 = parseFloat($('#edit_j1').val())
+             var j2 = parseFloat($('#edit_j2').val())
+             var j3 = parseFloat($('#edit_j3').val())
+             var j4 = parseFloat($('#edit_j4').val())
+             var space = $('#edit_space').val()
+             var description = $('#edit_description').val()
+             var json = {id:id,
+                         name:name,
+                         position:[j0,j1,j2,j3,j4],
+                         space:space,
+                         description,description}
+             $.ajax({
+                type:'POST',
+                url:'/update',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    $('#myModal').modal('hide')
+                    window.location.href = '/'
+                    bindPositions(res)
+                    }
+                })
+             
+        })
+        $('#btn_add_joint').on('click',function(e){
+               $.ajax({
+                type:'GET',
+                url:'/get_current_position/joint',
+                //data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res)
+                    pos = res.data
+                     $('#edit_id').val("")
+                     $('#edit_name').val("")
+                     $('#edit_j0').val(pos[0])
+                     $('#edit_j1').val(pos[1])
+                     $('#edit_j2').val(pos[2])
+                     $('#edit_j3').val(pos[3])
+                     $('#edit_j4').val(pos[4])
+                     $('#edit_space').val("joint")
+                     $('#edit_space').attr("disabled","disable")
+                     $('#edit_description').val("")
+                    $('#myModal').modal('show')
+                    //window.location.href = '/'
+                    }
+                })
+            
+             
+        });
+        $('#btn_add_xyz').on('click',function(e){
+               $.ajax({
+                type:'GET',
+                url:'/get_current_position/xyz',
+                //data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res)
+                    pos = res.data
+                     $('#edit_id').val("")
+                     $('#edit_name').val("")
+                     $('#edit_j0').val(pos[0])
+                     $('#edit_j1').val(pos[1])
+                     $('#edit_j2').val(pos[2])
+                     $('#edit_j3').val(pos[3])
+                     $('#edit_j4').val(pos[4])
+                     $('#edit_space').val("xyz")
+                     $('#edit_space').attr("disabled","disable")
+                     $('#edit_description').val("")
+                    $('#myModal').modal('show')
+                    //window.location.href = '/'
+                    }
+                })
+            
+             
+        });
+        
+       // SECTION FOR SAVED POSITION & COMMAND TABLE
+
+        // END SECTION FOR SAVED SEQUAN COMMAND TABLE
+        $(document).on("click", ".btn-delete-cmd-group", function (pos) {
+            var id = $(this).data('id');
+              $.ajax({
+                type:'GET',
+                url:'/delete_command_group/'+id,
+                data:{},
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    updateCommandGroupTable(res.data.command_groups)
+                   
+                    }
+                })
+           });
+        $(document).on("click", ".btn-goto-cmd-group", function (pos) {
+            var id = $(this).data('id');
+              $.ajax({
+                type:'GET',
+                url:'/goto_command_group/'+id,
+                data:{},
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    
+                    console.log(res);
+                   
+                    }
+                })
+           });
+        $('#btn_save_group').on('click',function(){
+            var ids = []
+            var name = $('#position_group_name').val()
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids,name:name}
+            $.ajax({
+                type:'POST',
+                url:'/save_command_group',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    updateCommandGroupTable(res.data.command_groups)
+                    
+                    //window.location.href = '/'
+                    }
+                })
+        });
+        $('#btn_gos').on('click',function(){
+            var ids = []
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids}
+            $.ajax({
+                type:'POST',
+                url:'/goto_multi_positions',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+        })
+        // END SECTION FOR SAVED SEQUAN COMMAND TABLE
+
+        // SECTION FOR LEFT SIDE BAR
+        $('#btn_home').on('click',function(){
+            $("#loading").addClass("progress-bar-animated");
+            $.ajax({
+                type:'POST',
+                url:'/home',
+                data:{},
+                success:function(res){
+                    ("#loading").removeClass("progress-bar-animated");
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            
+            });
+        $('#btn_connect').on('click',function(){
+            console.log(config)
+            animate(true)
+            $("#loading").addClass("progress-bar-animated");
+            $.ajax({
+                type:'POST',
+                url:'/connect',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                data:{},
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    
+                    }
+                })
+            
+            });
+        $('#btn_refresh').on('click',function(){
+                
+                animate(true)
+                $.ajax({
+                    type:'GET',
+                    url:'/get_position',
+                    contentType:'application/json; charset=utf-8',
+                    dataType:'json',
+                    success:function(res){
+                        bindPositions(res);
+                        animate(false)
+                    }
+                    })
+            
+            });
+        $('#btn_send_joint').on('click',function(){
+             var j0 = parseFloat($('#J0').val())
+             var j1 = parseFloat($('#J1').val())
+             var j2 = parseFloat($('#J2').val())
+             var j3 = parseFloat($('#J3').val())
+             var j4 = parseFloat($('#J4').val())
+             var json = {'j0':j0,
+                         'j1':j1,
+                         'j2':j2,
+                         'j3':j3,
+                         'j4':j4}
+            animate(true)
+            $.ajax({
+                type:'POST',
+                url:'/adjust_joints',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    console.log(res)
+                    
+                    }
+                })
+        })
+        $('#btn_send_xyz').on('click',function(){
+             var x = parseFloat($('#X').val())
+             var y = parseFloat($('#Y').val())
+             var z = parseFloat($('#Z').val())
+             var a = parseFloat($('#A').val())
+             var b = parseFloat($('#B').val())
+             var json = {'x':x,
+                         'y':y,
+                         'z':z,
+                         'a':a,
+                         'b':b}
+            animate(true)
+            $.ajax({
+                type:'POST',
+                url:'/adjust_axis',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    console.log(res)
+                    
+                    }
+                })
+        });
+        var grip = true
+        $('#btn_grip').on('click',function(){
+             grip = !grip;
+             var json = {'grip':grip}
+            animate(true)
+            $.ajax({
+                type:'POST',
+                url:'/grip',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    animate(false)
+                    console.log(res)
+                    
+                    }
+                })
+        });
+        // SECTION FOR LEFT SIDE BAR
+
+        // DOCUMENT READY
+        $(document).ready(function (){
+            $("#state_loading").css('display','none')
+            $("#btnToggle").on('click', function(){
+                
+                $("#leftBar").toggle();
+                
+            })
+        })
+        // OTHERS FUNCTION
+
+        function bindPositions(res){
+           
+                    console.log('binding',res)
+                    var joints = res.data.joint;
+                    for (i = 0; i < joints.length; i++) {
+                        $(`#J${i}`).val(joints[i])
+                    }
+                    var axis = ['X','Y','Z','A','B']
+                    var xyzs = res.data.xyz;
+                    for (i = 0; i < axis.length; i++) {
+                        $(`#${axis[i]}`).val(xyzs[i])
+                        console.log(`#${axis[i]}`, ' ',xyzs[i] )
+                    }
+                    
+                    
+        }
+        function animate(isAnimated=true){
+           
+            if (isAnimated){
+                $("#loading").css('width','100%');
+                $("#loading").addClass("progress-bar-animated");
+                $("#state_loading").removeAttr('style');
+                
+              
+            }else{
+                $("#loading").removeClass("progress-bar-animated");
+                $("#loading").css('width','0%');
+                $("#state_loading").css('display','none');
+                
+               
+            }
+        }
+        function getPositions(){
+            $.ajax({
+                type:'GET',
+                url:'/get_position',
+                data:{},
+                success:function(res){
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            
+            }
+        function addCmd(index){
+            var cmd = positions[index]
+                commands.push(cmd)
+             
+        }
+        function removeCmd(index){
+            commands.splice(index, 1);
+        }
+        function getCmdgroups(){
+            console.log('get cmds');
+            $.ajax({
+                type:'GET',
+                url:'/get_command_groups',
+                data:{},
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    var cmdGroups = res.data.command_groups
+                    updateCommandGroupTable(cmdGroups)
+                    }
+                })
+        }
+        function updateCmdsTable(){
+            var rows = ''
+           for (i=0;i<commands.length;i++){
+               var cmd = commands[i]
+                var row ='  <tr data-id='+i+'><th scope="row">'+cmd.id+
+                '</th><td>'+cmd.name+
+                '</td><td><a data-id='+i+' class="remove-click min-w-full px-1 py-1 btn btn-danger text-white" >X</a></td></tr>'
+                rows += row
+           }
+            $('#cmds_tbody').html(rows)
+            
+        }
+        function updateCommandGroupTable(cmdGroups){
+            
+            var rows = ''
+            console.log('cmdGroup: ',cmdGroups);
+           for (i=0;i<cmdGroups.length;i++){
+               var cmdGroup = cmdGroups[i]
+                var row ='<tr class="" data-id={{i}}>'+
+                            '<th scope="row">'+
+                                '<button id="btn_gos_tb" data-index='+i+' data-id='+cmdGroup.name+' name="goto_button_tb" type="submit" class="btn-goto-cmd-group px-4 mt-1 mr-2 btn btn-primary">GO</button>' +
+                                '<button data-index='+i+' data-id='+cmdGroup.name+' name= '+cmdGroup.name+' class="btn-delete-cmd-group pl-1 pr-1 mt-1 btn btn-danger" >DELETE</button>'+
+                            '</th>'+
+                            '<td>'+cmdGroup.name+'</td>'+
+                            '<td>'+cmdGroup.cmds+'</td>'+
+                        +'</tr>'
+                rows += row
+           }
+            $('#command_group_tbody').html(rows)
+        }
+
+        // document.getElementById("btnToggle").onclick = function(){
+        //     const currentVisibility = document.getElementById("leftBar").style.display
+        //     document.getElementById("leftBar").style.display = currentVisibility == "none" ? "inline" : "none";
+        // }
+    </script>
+
+{% endblock %}
+

@@ -3,7 +3,10 @@ command_groups:
   - 8
   - 25
   - 26
-  name: abc
+  - 25
+  - 8
+  - 28
+  name: s1
 idFactory:
   issuedIdCount: 38
   lastId: 38

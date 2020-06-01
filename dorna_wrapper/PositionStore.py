@@ -102,6 +102,11 @@ class PositionStore:
             return self.command_groups
         else:
             return []
+    def getCommandGroup(self,name):
+        for cmd in self.getCommandGroups():
+            if cmd['name'] == name:
+                return cmd
+        return None
     def getPostion(self,name):
         for pos in self.getAllPositions():
             if pos['name'] == name:
@@ -236,7 +241,7 @@ class PositionStore:
                 for pos in self.getCommandGroups():
                     if pos['name'] == name:
                         self.command_groups.remove(pos)
-                        self.updateCommandGroups(self.positions)
+                        self.updateCommandGroups(self.command_groups)
                         print(name," deleted!")
                         return 1
                 print(name," position not found!")

@@ -24,6 +24,7 @@
         
     </style>
         <div class="row" style="height: 92%;">
+            <!-- LEFT SIDE BAR VIEW -->
             <div id="leftBar" class="col-3 scrollable-wrapper p-0">
                 <div class="col-md-12  bg-gray-700 p-4">
                     
@@ -90,7 +91,7 @@
                                     <div class="dropdown-menu p-2 w-90">
                                       <!-- Dropdown menu links --> 
                                       <input id="position_group_name" type="text" class="form-control my-2" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-                                      <button id="btn_saves" type="button" class="btn btn-success mx-1">Save</button>
+                                      <button id="btn_save_group" type="button" class="btn btn-success mx-1">Save</button>
                                     </div>
                                   </div>
                                 
@@ -124,6 +125,9 @@
                     </div>
                 </div>
             </div>
+            <!-- END LEFT SIDE BAR VIEW -->
+
+            <!-- RIGHT BIG CONTENT VIEW -->
             <div id="content" class="col scrollable-wrapper p-0">
                 <div class="col-md-12 m-0 p-0">
                     <div class="row bg-dark">
@@ -141,7 +145,7 @@
                             </h5>
                           </div>
                       
-                          <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                          <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
                                 <div class="flex p-4">
                                     <div class="w-1/2 m-2 row flex justify-center p-4 bg-gray-700 rounded-lg">
@@ -254,21 +258,21 @@
                                       </tr>
                                     </thead>
                                     <tbody>
-                                    {%for i in range(0,posCount)%}
+                                    {%for i in range(0,data.get('posCount'))%}
                                     
                                       <tr class="add-click" data-id={{i}}>
                                             <th scope="row">
-                                            <button id="btn_go" data-id={{positions[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
+                                            <button id="btn_go" data-id={{data.get('positions')[i].get('id','n/a')}}  name='goto_button' type="submit" class="go-click min-w-full pl-1 pr-1 mt-1 btn btn-primary">GO</button>
                                             <button id="btn-edit" name='edit' data-id={{i}} data-toggle="modal" data-target="#myModal" class="edit-click min-w-full pl-1 pr-1 mt-1 btn btn-warning">EDIT</button>
-                                            <a href={{ url_for('delete',id = positions[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
+                                            <a href={{ url_for('delete',id = data.get('positions')[i].get('id','n/a'))}} class="min-w-full pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
             
                                              
                                             </th>
-                                            <td>{{positions[i].get('id','n/a')}}</td>
-                                            <td>{{positions[i].get('name','n/a')}}</td>
-                                            <td>{{positions[i].get('position','n/a')}}</td>
-                                            <td>{{positions[i].get('space','n/a')}}</td>
-                                            <td>{{positions[i].get('description','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('id','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('name','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('position','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('space','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('description','n/a')}}</td>
                                         
                                       </tr>
                                       {%endfor%}
@@ -277,15 +281,66 @@
                             </div>
                           </div>
                         </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                              <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapseTwo">
+                                    Sequence of Commands:
+                                </button>
+                              </h5>
+                            </div>
+                            <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordion">
+                              <div class="card-body">
+                                  <table class="table table-hover">
+                                      <thead class="thead-dark">
+                                          <tr>
+                                            <th colspan="6">Saved Sequence</th>
+                                            <!-- <th>
+                                              <div class="dropdown">
+                                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                SAVE CURRENT POSITION
+                                              </button>
+                                              <div class="dropdown-menu p-2" aria-labelledby="dropdownMenu2">
+                                                  <button id="btn_add_joint" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >JOINT POSITION</button>
+                                                  <button id="btn_add_xyz" class="dropdown-item min-w-full pl-1 pr-1 mt-1 btn btn-primary" >XYZ POSITION</button>
+                                              </div>
+                                            </div></th> -->
+              
+                                          </tr>
+                                        </thead>
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">CMD</th>  
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Positions</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody id="command_group_tbody">
+                                      {%for i in range(0,data.get('cmdGroupsCount'))%}
+                                      
+                                        <tr class="" data-id={{i}}>
+                                              <th scope="row">
+                                              <a href={{url_for('goto_command_group',name = data.get('cmdGroups')[i].get('name','n/a'))}}}} id="btn_gos_tb" data-id={{data.get('cmdGroups')[i].get('name','n/a')}}  name='goto_button_tb' type="submit" class="gos-click px-4 mt-1 btn btn-primary">GO</a>
+                                              <a href={{ url_for('delete_command_group',name = data.get('cmdGroups')[i].get('name','n/a'))}} class=" pl-1 pr-1 mt-1 btn btn-danger" >DELETE</a>
+                                              </th>
+                                              <td>{{data.get('cmdGroups',[])[i].get('name','n/a')}}</td>
+                                              <td>{{data.get('cmdGroups',[])[i].get('cmds','n/a')}}</td>
+                                        </tr>
+                                        {%endfor%}
+                                      </tbody>
+                                  </table>  
+                              </div>
+                            </div>
+                          </div>
                     </div>
                 </div>
 
             </div>
-            
+            <!-- END RIGHT BIG CONTENT VIEW -->
         </div>
 
 
-        <!-- Modal -->
+    <!-- Modal For Save Postion or update Position -->
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable  modal-lg" role="document">
             <div class="modal-content">
@@ -346,9 +401,9 @@
             </div>
           </div>
         </div>
-    
+    <!-- Modal -->
 
-  
+  <!-- Script for Sequan drag drop table -->
     <script type="text/javascript">
         var fixHelperModified = function(e, tr) {
             var $originals = tr.children();
@@ -374,9 +429,12 @@
                 });
     </script>
     <script>
-        var positions = {{ positions|tojson }};
-        var config = {{ config|tojson }}
+        // var cmdGroups = {{data.get('cmdGroups')|tojson}}
+        var positions = {{ data.get('positions')|tojson }};
+        var config = {{ data.get('config')|tojson }}
         var commands = []
+        getCmdgroups()
+        // SECTION FOR MANUAL CONTROL 'Arm Controller'
         $(document).on('input', '#xyzRange', function() {
             $('#xyzRangeValue').html( $(this).val() );
         });
@@ -437,6 +495,9 @@
             }
             
         })
+        // END SECTION FOR MANUAL CONTROL 'Arm Controller'
+
+        // SECTION FOR SAVED POSITION & COMMAND TABLE
         $(document).on("click", ".add-click", function (pos) {
             
              var index = $(this).data('id');
@@ -449,47 +510,7 @@
             removeCmd(index)
             updateCmdsTable()
            });
-        $('#btn_saves').on('click',function(){
-            var ids = []
-            var name = $('#position_group_name').val()
-            commands.forEach(e=>{
-                ids.push(e.id)
-            })
-            var json = {ids:ids,name:name}
-            $.ajax({
-                type:'POST',
-                url:'/save_command_group',
-                data:JSON.stringify(json),
-                contentType:'application/json; charset=utf-8',
-                dataType:'json',
-                success:function(res){
-                    bindPositions(res)
-                    console.log(res);
-                    //window.location.href = '/'
-                    }
-                })
-        });
-        $('#btn_gos').on('click',function(){
-            var ids = []
-            commands.forEach(e=>{
-                ids.push(e.id)
-            })
-            var json = {ids:ids}
-            $.ajax({
-                type:'POST',
-                url:'/goto_multi_positions',
-                data:JSON.stringify(json),
-                contentType:'application/json; charset=utf-8',
-                dataType:'json',
-                success:function(res){
-                    bindPositions(res)
-                    console.log(res);
-                    //window.location.href = '/'
-                    }
-                })
-        })
-
-            $(document).on("click", ".go-click", function (pos) {
+        $(document).on("click", ".go-click", function (pos) {
              var id = $(this).data('id');
               $.ajax({
                 type:'POST',
@@ -503,9 +524,9 @@
                     //window.location.href = '/'
                     }
                 })
-            });
-           
-         $(document).on("click", ".edit-click", function (pos) {
+        });
+                 
+        $(document).on("click", ".edit-click", function (pos) {
              var posIndex = $(this).data('id');
              var position = positions[posIndex];
              console.log('data >>',position);
@@ -521,7 +542,7 @@
              $('#edit_space').removeAttr("disabled")
              $('#edit_description').val(position.description)
             });
-         $('#btn_save').on('click',function(e){
+        $('#btn_save').on('click',function(e){
              var id = $('#edit_id').val()
              var name = $('#edit_name').val()
              var j0 = parseFloat($('#edit_j0').val())
@@ -551,7 +572,7 @@
                 })
              
         })
-          $('#btn_add_joint').on('click',function(e){
+        $('#btn_add_joint').on('click',function(e){
                $.ajax({
                 type:'GET',
                 url:'/get_current_position/joint',
@@ -605,7 +626,83 @@
             
              
         });
-         $('#btn_home').on('click',function(){
+        
+       // SECTION FOR SAVED POSITION & COMMAND TABLE
+
+        // END SECTION FOR SAVED SEQUAN COMMAND TABLE
+        $(document).on("click", ".btn-delete-cmd-group", function (pos) {
+            var id = $(this).data('id');
+              $.ajax({
+                type:'GET',
+                url:'/delete_command_group/'+id,
+                data:{},
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    updateCommandGroupTable(res.data.command_groups)
+                   
+                    }
+                })
+           });
+        $(document).on("click", ".btn-goto-cmd-group", function (pos) {
+            var id = $(this).data('id');
+              $.ajax({
+                type:'GET',
+                url:'/goto_command_group/'+id,
+                data:{},
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    
+                    console.log(res);
+                   
+                    }
+                })
+           });
+        $('#btn_save_group').on('click',function(){
+            var ids = []
+            var name = $('#position_group_name').val()
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids,name:name}
+            $.ajax({
+                type:'POST',
+                url:'/save_command_group',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    updateCommandGroupTable(res.data.command_groups)
+                    
+                    //window.location.href = '/'
+                    }
+                })
+        });
+        $('#btn_gos').on('click',function(){
+            var ids = []
+            commands.forEach(e=>{
+                ids.push(e.id)
+            })
+            var json = {ids:ids}
+            $.ajax({
+                type:'POST',
+                url:'/goto_multi_positions',
+                data:JSON.stringify(json),
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                success:function(res){
+                    bindPositions(res)
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+        })
+        // END SECTION FOR SAVED SEQUAN COMMAND TABLE
+
+        // SECTION FOR LEFT SIDE BAR
+        $('#btn_home').on('click',function(){
             $("#loading").addClass("progress-bar-animated");
             $.ajax({
                 type:'POST',
@@ -637,8 +734,7 @@
                 })
             
             });
-
-            $('#btn_refresh').on('click',function(){
+        $('#btn_refresh').on('click',function(){
                 
                 animate(true)
                 $.ajax({
@@ -724,7 +820,9 @@
                     }
                 })
         });
-        
+        // SECTION FOR LEFT SIDE BAR
+
+        // DOCUMENT READY
         $(document).ready(function (){
             $("#state_loading").css('display','none')
             $("#btnToggle").on('click', function(){
@@ -733,6 +831,8 @@
                 
             })
         })
+        // OTHERS FUNCTION
+
         function bindPositions(res){
            
                     console.log('binding',res)
@@ -765,7 +865,7 @@
                
             }
         }
-         function getPositions(){
+        function getPositions(){
             $.ajax({
                 type:'GET',
                 url:'/get_position',
@@ -777,7 +877,6 @@
                 })
             
             }
-
         function addCmd(index){
             var cmd = positions[index]
                 commands.push(cmd)
@@ -785,6 +884,20 @@
         }
         function removeCmd(index){
             commands.splice(index, 1);
+        }
+        function getCmdgroups(){
+            console.log('get cmds');
+            $.ajax({
+                type:'GET',
+                url:'/get_command_groups',
+                data:{},
+                dataType:'json',
+                success:function(res){
+                    console.log(res);
+                    var cmdGroups = res.data.command_groups
+                    updateCommandGroupTable(cmdGroups)
+                    }
+                })
         }
         function updateCmdsTable(){
             var rows = ''
@@ -797,6 +910,24 @@
            }
             $('#cmds_tbody').html(rows)
             
+        }
+        function updateCommandGroupTable(cmdGroups){
+            
+            var rows = ''
+            console.log('cmdGroup: ',cmdGroups);
+           for (i=0;i<cmdGroups.length;i++){
+               var cmdGroup = cmdGroups[i]
+                var row ='<tr class="" data-id={{i}}>'+
+                            '<th scope="row">'+
+                                '<button id="btn_gos_tb" data-index='+i+' data-id='+cmdGroup.name+' name="goto_button_tb" type="submit" class="btn-goto-cmd-group px-4 mt-1 mr-2 btn btn-primary">GO</button>' +
+                                '<button data-index='+i+' data-id='+cmdGroup.name+' name= '+cmdGroup.name+' class="btn-delete-cmd-group pl-1 pr-1 mt-1 btn btn-danger" >DELETE</button>'+
+                            '</th>'+
+                            '<td>'+cmdGroup.name+'</td>'+
+                            '<td>'+cmdGroup.cmds+'</td>'+
+                        +'</tr>'
+                rows += row
+           }
+            $('#command_group_tbody').html(rows)
         }
 
         // document.getElementById("btnToggle").onclick = function(){

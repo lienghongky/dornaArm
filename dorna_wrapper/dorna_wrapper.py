@@ -265,6 +265,7 @@ class Arm:
                                   position=position,
                                   depositionStorescription=description,
                                   space=space)
+    
     def goToPositionID(self,i):
         pos = self.positionStore.getPostionById(i)
         print('id :',i,' pos',pos.position)

@@ -3,6 +3,7 @@ from dorna_wrapper.dorna_wrapper import Arm
 import json
 app = Flask(__name__)
 arm = Arm()
+##OTHER FUCNTION
 def resposePositions():
     arm.waitForCompletion()
     joint = json.loads(arm.getPosition('joint'))
@@ -12,10 +13,7 @@ def resposePositions():
     print("respose position ",respose)
     return make_response(json.dumps(respose),200)
 
-
-
-
-#### API ROUTE
+#### GET ROBOT JOINTS AND XYZ
 @app.route('/get_current_position/<string:space>',methods=['GET'])
 def getCurrentPosition(space):
     pos = json.loads(arm.getPosition(space))
@@ -24,7 +22,7 @@ def getCurrentPosition(space):
     print("updating ",respose)
     return make_response(json.dumps(respose),200)
 
-
+### POSITION AND COMMAND DATA FUNCTION
 @app.route('/get_position',methods=['GET'])
 def getPosition():
     joint = json.loads(arm.getPosition('joint'))
@@ -34,19 +32,6 @@ def getPosition():
     print("updating ",respose)
     return make_response(json.dumps(respose),200)
 
-@app.route('/save_command_group',methods=['POST'])
-def save_command_group():
-    data = request.json
-    print("goto ",data)
-    ids = data.get('ids',[])
-    name = data.get('name','name')
-    arm.positionStore.saveGroup(name,ids)
-    return  resposePositions()
-@app.route('/get_command_groups',methods=['GET'])
-def get_command_groups():
-    cmd_groups = arm.positionStore.getCommandGroups()
-    respose = {'success':True,'data':{'command_groups':cmd_groups}}
-    return make_response(json.dumps(respose),200)
 @app.route('/update',methods=['POST'])
 def update():
     json = request.json
@@ -65,12 +50,48 @@ def delete(id):
     res = arm.positionStore.deleteWithId(id)
     print("Deleting ",res)
     return redirect('/')
+ 
+### GROUP COMMAND DATA FUNCTION 
+@app.route('/save_command_group',methods=['POST'])
+def save_command_group():
+    data = request.json
+    ids = data.get('ids',[])
+    name = data.get('name','name')
+    arm.positionStore.saveGroup(name,ids)
+    cmd_groups = arm.positionStore.getCommandGroups()
+    respose = {'success':True,'data':{'command_groups':cmd_groups}}
+    print(respose)
+    return make_response(json.dumps(respose),200)
 
+@app.route('/get_command_groups',methods=['GET'])
+def get_command_groups():
+    cmd_groups = arm.positionStore.getCommandGroups()
+    respose = {'success':True,'data':{'command_groups':cmd_groups}}
+    return make_response(json.dumps(respose),200)
+
+@app.route('/delete_command_group/<string:name>')
+def delete_command_group(name):
+    print("Deleting group ",name)
+    res = arm.positionStore.deleteGroup(name)
+    cmd_groups = arm.positionStore.getCommandGroups()
+    respose = {'success':True,'data':{'command_groups':cmd_groups}}
+    return make_response(json.dumps(respose),200)
+
+### ROBOT MOVE FUNCETIONS
 @app.route('/goto_position/<int:id>',methods=['POST'])
 def gotoPosition(id):
     print("goto ",id)
     arm.goToPositionID(id)
     return  resposePositions()
+
+@app.route('/goto_command_group/<string:name>',methods=['Get'])
+def goto_command_group(name):
+    print("goto command_group",name)
+    ids = arm.positionStore.getCommandGroup(name).get('cmds',[])
+    print(ids)
+    arm.goToMultiPositionIDs(ids)
+    return resposePositions()
+
 @app.route('/goto_multi_positions',methods=['POST'])
 def goto_Multi_Positions():
     data = request.json
@@ -117,6 +138,7 @@ def adjust_joint():
     arm.adjustJoints(cmd,True)
     return resposePositions()
 
+## 
 @app.route('/home',methods=['POST'])
 def home():
     arm.home()
@@ -136,16 +158,23 @@ def stack():
     posCount = len(positions)
     config = json.loads(arm.robot.config())
     return render_template('stack.html',posCount=posCount,positions=positions,config=config)
-@app.route('/',methods=['GET','POST'])
-def index():
-    #arm.connect()
-    positions = arm.positionStore.getAllPositions()
-    posCount = len(positions)
-    config = json.loads(arm.robot.config())
-    return render_template('fixed.html',posCount=posCount,positions=positions,config=config)
+
 @app.route('/config',methods=['GET','POST'])
 def configPage():
     config = json.loads(arm.robot.config())   
     return render_template('config.html',config=config)
+
+@app.route('/',methods=['GET','POST'])
+def index():
+    #arm.connect()
+    cmdGroups = arm.positionStore.getCommandGroups()
+    cmdGroupsCount = len(cmdGroups)
+    positions = arm.positionStore.getAllPositions()
+    posCount = len(positions)
+    config = json.loads(arm.robot.config())
+
+    data = {'posCount':posCount,'positions':positions,'config':config,'cmdGroups':cmdGroups,'cmdGroupsCount':cmdGroupsCount}
+    return render_template('fixed.html',data=data)
+    
 if __name__ == '__main__':
     app.run(debug=True)

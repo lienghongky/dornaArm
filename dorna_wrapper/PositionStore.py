@@ -205,7 +205,7 @@ class PositionStore:
                 tempPos['position'] = position if position != None else pos['position']
                 tempPos['description'] = description if description != None else pos['description']
                 tempPos['space'] = space if space != None else pos['space']
-                tempPos['gpio'] = gpio if gpio != None else gpio.get('gpio',None)
+                tempPos['gpio'] = gpio if gpio != None else pos.get('gpio',None)
                 index = self.positions.index(pos)
                 self.positions[index] = tempPos
                 self.updateList(self.positions)

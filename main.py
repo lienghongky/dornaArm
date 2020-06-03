@@ -164,6 +164,10 @@ def configPage():
     config = json.loads(arm.robot.config())   
     return render_template('config.html',config=config)
 
+@app.route('/about',methods=['GET','POST'])
+def about():
+    return render_template('about.html')
+
 @app.route('/',methods=['GET','POST'])
 def index():
     #arm.connect()

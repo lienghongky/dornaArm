@@ -1,15 +1,51 @@
 command_groups:
 - cmds:
-  - 8
-  - 25
-  - 26
-  - 25
-  - 8
-  - 28
-  name: s1
+  - 36
+  - 41
+  - 40
+  - 35
+  - 41
+  - 43
+  - 50
+  - 49
+  - 46
+  - 47
+  - 48
+  - 47
+  - 46
+  - 49
+  - 50
+  - 41
+  - 40
+  - 36
+  - 41
+  name: s2
+- cmds:
+  - 36
+  - 41
+  - 40
+  - 35
+  - 41
+  - 43
+  - 50
+  - 49
+  - 46
+  - 51
+  - 52
+  - 53
+  - 52
+  - 51
+  - 46
+  - 49
+  - 50
+  - 41
+  - 40
+  - 36
+  - 41
+  name: s3
 idFactory:
-  issuedIdCount: 38
-  lastId: 38
+  issuedIdCount: 53
+  lastId: 53
 positions:
 - description: touch tools
   id: 8
@@ -142,4 +178,159 @@ positions:
   - 0
   - 0
   - 0
+  space: joint
+- description: Before turning off the arm
+  gpio: null
+  id: 39
+  name: prePowerDown
+  position:
+  - 1.0e-05
+  - 135
+  - -90
+  - -45
+  - 0
+  space: joint
+- description: in side the hand folk at 30degree
+  gpio: null
+  id: 40
+  name: pickFolk
+  position:
+  - -29.8397
+  - 21.638
+  - -83.57190000000003
+  - -27.566000000000003
+  - 91
+  space: joint
+- description: pick up 50 mm from the indexer base
+  gpio: null
+  id: 41
+  name: pickUpHandFork
+  position:
+  - -29.839678824810505
+  - 33.59996694067868
+  - -86.77986943664911
+  - -36.319997504029566
+  - 91
+  space: joint
+- description: approche the z to about under the item placement at -120degree
+  gpio: null
+  id: 42
+  name: prePickItem
+  position:
+  - -119.99962401283149
+  - 28.725576496100476
+  - -121.58709074274688
+  - 3.3616142466464076
+  - 91
+  space: joint
+- description: hover above the position of -120 and about to approch z down
+  gpio: null
+  id: 43
+  name: hoverOnApprochPickPose
+  position:
+  - -119.99962401283149
+  - 42.21095358684521
+  - -124.64010990053201
+  - -7.070743686313198
+  - 91
+  space: joint
+- description: 'Feel free to power down here but make sure the shock absorber is in
+    place '
+  gpio: null
+  id: 44
+  name: powerDownable
+  position:
+  - 0
+  - 160
+  - -80
+  - -45
+  - 0
+  space: joint
+- description: pick the item up
+  gpio: null
+  id: 46
+  name: pickUpItem
+  position:
+  - -119.99700196140397
+  - 35.22991891159333
+  - -82.39976025418525
+  - -40.330158657408084
+  - 91
+  space: joint
+- description: pull item back in a 50mm
+  gpio: null
+  id: 47
+  name: pullItemBackIn
+  position:
+  - -119.99679320516238
+  - 43.44709724876331
+  - -105.22723411330992
+  - -25.719863135453394
+  - 91
+  space: joint
+- description: drop item position at 60degree
+  gpio: null
+  id: 48
+  name: dropItem
+  position:
+  - 60
+  - 43.4471
+  - -105.22717999999998
+  - -25.719899999999996
+  - 91
+  space: joint
+- description: pick the item position
+  gpio: null
+  id: 49
+  name: pickItem2
+  position:
+  - -119.9996310514391
+  - 21.126764769171217
+  - -78.11023095612259
+  - -31.516433813048632
+  - 91
+  space: joint
+- description: pre Pick Item 2
+  gpio: null
+  id: 50
+  name: PrePickItem2
+  position:
+  - -119.99962401283149
+  - 32.054073509089214
+  - -122.66963098038704
+  - 1.1157574712978473
+  - 91
+  space: joint
+- description: liftItemUpAt 100
+  gpio: null
+  id: 51
+  name: liftItemUp
+  position:
+  - -90
+  - 99.26984130811078
+  - -97.42542374166595
+  - -89.34451756644485
+  - 91
+  space: joint
+- description: lift item up at drop position 75
+  gpio: null
+  id: 52
+  name: liftItemUpDropPos
+  position:
+  - 70.003
+  - 88.1155
+  - -45.92011000000002
+  - -129.695495
+  - 90.999995
+  space: joint
+- description: dropItemAt75
+  gpio: null
+  id: 53
+  name: dropItemAt75
+  position:
+  - 70.00286993595911
+  - 35.646678087614816
+  - -96.39798375948942
+  - -26.748794328125403
+  - 91
   space: joint

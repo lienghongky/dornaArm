@@ -40,9 +40,25 @@
                         </div>    
                     </div>
                     <p id="connection"class=" col-sm-6 text-sm text-white">Connect:</p>
-                     <button type="button" id='btn_connect' class="col-sm-6 btn btn-success m-2">Connect</button>
-                    <button type="button" id='btn_home' class="col-sm-6 btn btn-primary m-2">HOME</button>
-                    <button type="button" id='btn_refresh' class="col-sm-6 btn btn-primary m-2">REFRESH</button>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <button type="button" id='btn_connect' class="w-full btn btn-success">Connect</button>
+                      </div>
+                      <div class="col-md-6">
+                        <button type="button" id='btn_pause' class="w-full btn btn-danger">FORCE STOP</button>
+                      </div>
+                    </div>
+                    <div class="row my-4">
+                      <div class="col-md-6">
+                        <button type="button" id='btn_home' class="w-full btn btn-primary">HOME</button>
+                      </div>
+                      <div class="col-md-6">
+                        <button type="button" id='btn_refresh' class="w-full btn btn-primary">REFRESH</button>
+                      </div>
+                    </div>
+                    
+                    
+                    
                     <div class="progress row m-2">
                         <div id="loading" class="progress-bar progress-bar-striped bg-warning " role="progressbar" style="width: 0%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
@@ -233,7 +249,7 @@
                                 <table class="table table-hover">
                                     <thead class="thead-dark">
                                         <tr>
-                                          <th colspan="5">Saved Positionn</th>
+                                          <th colspan="6">Saved Positionn</th>
                                           <th>
                                             <div class="dropdown">
                                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -254,6 +270,7 @@
                                         <th scope="col">Name</th>
                                         <th scope="col">Position</th>
                                         <th scope="col">(Joint/XYZ)</th>
+                                        <th scope="col">Speed</th>
                                         <th scope="col">Description</th>
                                       </tr>
                                     </thead>
@@ -272,6 +289,7 @@
                                             <td>{{data.get('positions')[i].get('name','n/a')}}</td>
                                             <td>{{data.get('positions')[i].get('position','n/a')}}</td>
                                             <td>{{data.get('positions')[i].get('space','n/a')}}</td>
+                                            <td>{{data.get('positions')[i].get('speed','Defualt')}}</td>
                                             <td>{{data.get('positions')[i].get('description','n/a')}}</td>
                                         
                                       </tr>
@@ -354,33 +372,33 @@
                <form>
                    <input name="edit_id" type="hidden" class="form-control" id="edit_id">
                   <div class="form-group">
-                    <label for="exampleFormControlInput1">NAME</label>
+                    <label for="edit_name">NAME</label>
                     <input name="edit_name" type="text" class="form-control" id="edit_name" placeholder="POSITION NAME">
                   </div>
                   <div class="form-row">
                     <div class="form-group col-md-2">
-                      <label for="edit-j0">J0/X</label>
+                      <label for="edit_j0">J0/X</label>
                       <input name="edit_j0" type="number" class="form-control" id="edit_j0">
                     </div>
                     <div class="form-group col-md-2">
-                        <label for="edit-j1">J1/Y</label>
+                        <label for="edit_j1">J1/Y</label>
                         <input name="edit_j1" type="number" class="form-control" id="edit_j1">
                     </div>
                     <div class="form-group col-md-2">
-                      <label for="edit-j2">J2/Z</label>
+                      <label for="edit_j2">J2/Z</label>
                       <input name="edit_j2" type="number" class="form-control" id="edit_j2">
                     </div>
                      <div class="form-group col-md-2">
-                      <label for="edit-j3">J3/A</label>
+                      <label for="edit_j3">J3/A</label>
                       <input name="edit_j3" type="number" class="form-control" id="edit_j3">
                     </div>
                      <div class="form-group col-md-2">
-                      <label for="edit-j4">J4/B</label>
+                      <label for="edit_j4">J4/B</label>
                       <input name="edit_j4" type="number" class="form-control" id="edit_j4">
                     </div>
                   </div>
                   <div class="form-group">
-                    <label for="edit-space">SPANCE</label>
+                    <label for="edit_space">SPANCE</label>
                     <select name="edit_space" class="form-control" id="edit_space">
                       <option>joint</option>
                       <option>xyz</option>
@@ -388,7 +406,11 @@
                     </select>
                   </div>
                   <div class="form-group">
-                    <label for="edit-description">DESCRIPTION</label>
+                    <label for="edit_speed">Speed</label>
+                    <input name="edit_speed" type="number" class="form-control" id="edit_speed">
+                  </div>
+                  <div class="form-group">
+                    <label for="edit_description">DESCRIPTION</label>
                     <textarea name="edit_description"class="form-control" id="edit_description" rows="3"></textarea>
                   </div>
                   </form>
@@ -540,6 +562,7 @@
              $('#edit_j4').val(position.position[4])
              $('#edit_space').val(position.space)
              $('#edit_space').removeAttr("disabled")
+             $('#edit_speed').val(position.speed)
              $('#edit_description').val(position.description)
             });
         $('#btn_save').on('click',function(e){
@@ -551,11 +574,13 @@
              var j3 = parseFloat($('#edit_j3').val())
              var j4 = parseFloat($('#edit_j4').val())
              var space = $('#edit_space').val()
+             var speed = parseFloat($('#edit_speed').val())
              var description = $('#edit_description').val()
              var json = {id:id,
                          name:name,
                          position:[j0,j1,j2,j3,j4],
                          space:space,
+                         speed:speed,
                          description,description}
              $.ajax({
                 type:'POST',
@@ -591,6 +616,7 @@
                      $('#edit_j4').val(pos[4])
                      $('#edit_space').val("joint")
                      $('#edit_space').attr("disabled","disable")
+                     $('#edit_speed').val("60000")
                      $('#edit_description').val("")
                     $('#myModal').modal('show')
                     //window.location.href = '/'
@@ -618,6 +644,7 @@
                      $('#edit_j4').val(pos[4])
                      $('#edit_space').val("xyz")
                      $('#edit_space').attr("disabled","disable")
+                     $('#edit_speed').val(60000)
                      $('#edit_description').val("")
                     $('#myModal').modal('show')
                     //window.location.href = '/'
@@ -702,13 +729,33 @@
         // END SECTION FOR SAVED SEQUAN COMMAND TABLE
 
         // SECTION FOR LEFT SIDE BAR
+        $('#btn_pause').on('click',function(){
+            $("#loading").addClass("progress-bar-animated");
+            $.ajax({
+                type:'POST',
+                url:'/pause',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
+                data:{},
+                success:function(res){
+                    bindPositions(res)
+                    ("#loading").removeClass("progress-bar-animated");
+                    console.log(res);
+                    //window.location.href = '/'
+                    }
+                })
+            
+            });
         $('#btn_home').on('click',function(){
             $("#loading").addClass("progress-bar-animated");
             $.ajax({
                 type:'POST',
                 url:'/home',
+                contentType:'application/json; charset=utf-8',
+                dataType:'json',
                 data:{},
                 success:function(res){
+                    bindPositions(res)
                     ("#loading").removeClass("progress-bar-animated");
                     console.log(res);
                     //window.location.href = '/'

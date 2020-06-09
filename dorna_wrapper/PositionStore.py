@@ -20,7 +20,7 @@ class Position:
     SPACE_JOINT = 'joint'
     SPACE_XYZ = 'xyz'
 
-    def __init__(self,name,position,description,space='joint',gpio=None):
+    def __init__(self,name,position,description,space='joint',gpio=None,speed=None):
 
         """
         CLASS DEFINING A POSE IN JOINT SPACE
@@ -37,6 +37,7 @@ class Position:
         self.description=description
         self.path = self.PATH_JOINT if space == self.SPACE_JOINT else self.PATH_LINE
         self.gpio = gpio
+        self.speed = speed
 
 
 class PositionStore:
@@ -110,7 +111,7 @@ class PositionStore:
     def getPostion(self,name):
         for pos in self.getAllPositions():
             if pos['name'] == name:
-                return Position(name,pos['position'],pos['description'],pos['space'],pos.get('gpio',None))
+                return Position(name,pos['position'],pos['description'],pos['space'],pos.get('gpio',None),pos.get('speed',None))
         return None
     def getPostionById(self,i):
         for pos in self.getAllPositions():
@@ -121,21 +122,23 @@ class PositionStore:
                     des = pos.get('description','')
                     space = pos.get('space','joint')
                     gpio = pos.get('gpio',None)
-                    return Position(name,position,des,space,gpio)
+                    speed = pos.get('speed',None)
+                    return Position(name,position,des,space,gpio,speed)
         return None
     def updateList(self,newList):
         self.saveFile(self.getFileTemplate(newList))
     def updateCommandGroups(self,newList):
         self.saveFile(self.getFileTemplate(self.positions,None,newList))
         
-    def save(self,name,position,description,space,gpio=None):
+    def save(self,name,position,description,space,gpio=None,speed=None):
         newId = self.getNewId()
         tempPos = {'id':newId,
                    'name':name,
                    'position':position,
                    'description':description,
                    'space':space,
-                   'gpio':gpio
+                   'gpio':gpio,
+                   'speed':speed
                    }
         if os.path.isfile(self.positionPath):
             self.positions = self.getAllPositions()
@@ -182,14 +185,15 @@ class PositionStore:
         else:
            print(ID," position not found!")
            return -1
-    def update(self,name,position=None,description=None,space=None,gpio=None):
+    def update(self,name,position=None,description=None,space=None,gpio=None,speed=None):
         for pos in self.getAllPositions():
             if pos['name'] == name:
                 tempPos = pos
                 tempPos['position'] = position if position != None else pos['position']
                 tempPos['description'] = description if description != None else pos['description']
                 tempPos['space'] = space if space != None else pos['space']
-                tempPos['gpio'] = gpio if gpio != None else gpio.get('gpio',None)
+                tempPos['gpio'] = gpio if gpio != None else pos.get('gpio',None)
+                tempPos['speed'] = speed if speed != None else pos.get('speed',None)
                 index = self.positions.index(pos)
                 self.positions[index] = tempPos
                 self.updateList(self.positions)
@@ -197,7 +201,7 @@ class PositionStore:
                 return 1
         print(name," not found!")
         return -1
-    def updateWithId(self,ID,name,position=None,description=None,space=None,gpio=None):
+    def updateWithId(self,ID,name,position=None,description=None,space=None,gpio=None,speed=None):
         for pos in self.getAllPositions():
             if pos['id'] == ID:
                 tempPos = pos
@@ -206,10 +210,11 @@ class PositionStore:
                 tempPos['description'] = description if description != None else pos['description']
                 tempPos['space'] = space if space != None else pos['space']
                 tempPos['gpio'] = gpio if gpio != None else pos.get('gpio',None)
+                tempPos['speed'] = speed if speed != None else pos.get('speed',None)
                 index = self.positions.index(pos)
                 self.positions[index] = tempPos
                 self.updateList(self.positions)
-                print("updated!")
+                print("updated!",speed)
                 return 1
         print(name," not found!")
         return -1

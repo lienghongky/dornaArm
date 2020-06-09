@@ -37,10 +37,10 @@ def update():
     json = request.json
     print('json',json)
     if json['id'] == None or json['id']=='':
-        arm.positionStore.save(json['name'],json['position'],json['description'],json['space'])
+        arm.positionStore.save(json['name'],json['position'],json['description'],json['space'],json.get('gpio',None),json['speed'])
     else:
         print("request ",request.json['id'])
-        res = arm.positionStore.updateWithId(int(json['id']),json['name'],json['position'],json['description'],json['space'])
+        res = arm.positionStore.updateWithId(int(json['id']),json['name'],json['position'],json['description'],json['space'],json.get('gpio',None),json['speed'])
         print("updating ",res)
     return resposePositions()
 
@@ -143,6 +143,11 @@ def adjust_joint():
 def home():
     arm.home()
     return resposePositions()
+@app.route('/pause',methods=['POST'])
+def pause():
+    arm.robot.halt()
+    return resposePositions()
+
 
 @app.route('/connect',methods=['POST'])
 def connect():

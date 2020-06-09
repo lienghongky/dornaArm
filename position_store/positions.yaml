@@ -43,20 +43,53 @@ command_groups:
   - 36
   - 41
   name: s3
+- cmds:
+  - 36
+  - 57
+  - 56
+  - 58
+  - 54
+  - 35
+  - 60
+  - 61
+  - 62
+  - 63
+  - 61
+  name: eye-x
+- cmds:
+  - 36
+  - 57
+  - 56
+  - 58
+  - 54
+  - 35
+  - 60
+  - 61
+  - 62
+  - 63
+  - 60
+  - 64
+  - 36
+  - 58
+  - 56
+  - 57
+  name: camX
 idFactory:
-  issuedIdCount: 53
-  lastId: 53
+  issuedIdCount: 64
+  lastId: 64
 positions:
 - description: touch tools
+  gpio: null
   id: 8
   name: pickHight
   position:
   - -60
   - 135
   - -90
-  - -45.0
-  - 0.0
+  - -45
+  - 0
   space: joint
+  speed: 1000
 - description: at 0degreeUp
   id: 25
   name: upHigh0
@@ -246,6 +279,7 @@ positions:
   - -45
   - 0
   space: joint
+  speed: 800
 - description: pick the item up
   gpio: null
   id: 46
@@ -334,3 +368,109 @@ positions:
   - -26.748794328125403
   - 91
   space: joint
+- description: pick camer by moving on x axis
+  gpio: null
+  id: 54
+  name: pickXCamera
+  position:
+  - -30.430913320114584
+  - 9.94814852242707
+  - -105.61714447195095
+  - 95.66899594952389
+  - 0
+  space: joint
+  speed: 1000
+- description: 'before moving to prePickcamera '
+  gpio: null
+  id: 56
+  name: prePickCameraXaxis0
+  position:
+  - -30.430846556315924
+  - 27.733859696892264
+  - -125.18523974164131
+  - 97.45138004474904
+  - 0
+  space: joint
+  speed: 5000
+- description: approchPickCameraXaxis
+  gpio: null
+  id: 57
+  name: approchPickCameraXaxis
+  position:
+  - -30.430640664053218
+  - 34.876514276204034
+  - -104.36953504469454
+  - 69.49302076849052
+  - 0
+  space: joint
+  speed: 10000
+- description: testing
+  gpio: null
+  id: 58
+  name: prePickCameraXaxis02
+  position:
+  - 221.86388153340116
+  - -130.32713491890843
+  - 89.46891114860968
+  - -0.00011000000001510716
+  - 0
+  space: xyz
+  speed: 3000
+- description: liftCamerXUp01
+  gpio: null
+  id: 60
+  name: liftCamerXUp01
+  position:
+  - 243.41835999999998
+  - -142.9893
+  - 199.46874
+  - 0
+  - 0
+  space: xyz
+  speed: 20000
+- description: watchingTop
+  gpio: null
+  id: 61
+  name: watchingTop
+  position:
+  - 0
+  - 89.15819686114855
+  - -77.79739252142588
+  - 83.63929566027733
+  - 0
+  space: joint
+  speed: 20000
+- description: watchingRight
+  gpio: null
+  id: 62
+  name: watchingRight
+  position:
+  - -30
+  - 89.15821
+  - -77.79742999999996
+  - 83.63929499999999
+  - -44.999995
+  space: joint
+- description: watchingLeft
+  gpio: null
+  id: 63
+  name: watchingLeft
+  position:
+  - 30
+  - 89.15821
+  - -77.79742999999996
+  - 83.63929499999999
+  - 44.999995
+  space: joint
+- description: putXCameraBack
+  gpio: null
+  id: 64
+  name: putXCameraBack
+  position:
+  - 243.41834116413486
+  - -142.98921281838977
+  - 89.4687985377596
+  - -2.9999999991397914e-05
+  - 0
+  space: xyz
+  speed: 1000

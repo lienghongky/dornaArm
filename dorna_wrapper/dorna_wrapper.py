@@ -152,7 +152,10 @@ class Arm:
                 self.waitFor()
                 return 'Set Io: '+str(pin)+' value: '+str(value)
         print(gpio)
-        cmd = self.getMovementCommand(pose,speed=speed)
+        newSpeed = speed
+        if pose.speed != None:
+            newSpeed = pose.speed
+        cmd = self.getMovementCommand(pose,speed=newSpeed)
         print(cmd)
         self.robot.play(cmd)
         self.waitForCompletion()
@@ -181,7 +184,10 @@ class Arm:
                     continue
             
             #cmds.append(self.getMovementCommand(p,speed=speed))
-            cmd = self.getMovementCommand(p,speed=speed)
+            newSpeed = speed
+            if p.speed != None:
+                newSpeed = p.speed
+            cmd = self.getMovementCommand(p,speed=newSpeed)
             self.robot.play(cmd)
             self.waitForCompletion()
         '''

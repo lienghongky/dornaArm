@@ -74,9 +74,34 @@ command_groups:
   - 56
   - 57
   name: camX
+- cmds:
+  - 36
+  - 41
+  - 40
+  - 35
+  - 41
+  - 43
+  - 50
+  - 49
+  - 46
+  - 67
+  - 66
+  - 38
+  - 65
+  - 37
+  - 67
+  - 43
+  - 46
+  - 49
+  - 50
+  - 41
+  - 40
+  - 36
+  - 41
+  name: waterPick
 idFactory:
-  issuedIdCount: 64
-  lastId: 64
+  issuedIdCount: 67
+  lastId: 67
 positions:
 - description: touch tools
   gpio: null
@@ -234,6 +259,7 @@ positions:
   - -27.566000000000003
   - 91
   space: joint
+  speed: 1000
 - description: pick up 50 mm from the indexer base
   gpio: null
   id: 41
@@ -267,6 +293,7 @@ positions:
   - -7.070743686313198
   - 91
   space: joint
+  speed: 5000
 - description: 'Feel free to power down here but make sure the shock absorber is in
     place '
   gpio: null
@@ -291,6 +318,7 @@ positions:
   - -40.330158657408084
   - 91
   space: joint
+  speed: 1000
 - description: pull item back in a 50mm
   gpio: null
   id: 47
@@ -302,6 +330,7 @@ positions:
   - -25.719863135453394
   - 91
   space: joint
+  speed: 1000
 - description: drop item position at 60degree
   gpio: null
   id: 48
@@ -324,6 +353,7 @@ positions:
   - -31.516433813048632
   - 91
   space: joint
+  speed: 1000
 - description: pre Pick Item 2
   gpio: null
   id: 50
@@ -335,6 +365,7 @@ positions:
   - 1.1157574712978473
   - 91
   space: joint
+  speed: 1000
 - description: liftItemUpAt 100
   gpio: null
   id: 51
@@ -474,3 +505,42 @@ positions:
   - 0
   space: xyz
   speed: 1000
+- description: just wait for 10
+  gpio:
+    delay: 10
+    pin: -1
+    value: 0
+  id: 65
+  name: wait for 10
+  position:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  space: joint
+  speed: null
+- description: under the water tube
+  gpio: null
+  id: 66
+  name: getWater
+  position:
+  - 135.00459
+  - 33.3946
+  - -129.99933
+  - 9.104505000000003
+  - 145.999995
+  space: joint
+  speed: 600
+- description: rotation to water tube
+  gpio: null
+  id: 67
+  name: approchWater
+  position:
+  - 115.0046
+  - 33.3946
+  - -129.99933
+  - 9.104500000000002
+  - 96
+  space: joint
+  speed: 5000

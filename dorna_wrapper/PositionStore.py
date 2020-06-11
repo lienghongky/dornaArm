@@ -54,14 +54,14 @@ class PositionStore:
                               'issuedIdCount':0}
             self.command_groups = fileData.get('command_groups',[])
             self.saveFile(self.getFileTemplate(self.positions,self.idFactory,self.command_groups))
-            print(self.loadFile())
+            #print(self.loadFile())
         else :
             self.positions =  []
             self.idFactory =  {'lastId':0,
                               'issuedIdCount':0}
             self.command_groups = []
             self.saveFile(self.getFileTemplate(self.positions,self.idFactory,self.command_groups))
-            print(self.loadFile())
+            #print(self.loadFile())
             
     def loadFile(self):
         if os.path.isfile(self.positionPath):
@@ -130,6 +130,9 @@ class PositionStore:
     def updateCommandGroups(self,newList):
         self.saveFile(self.getFileTemplate(self.positions,None,newList))
         
+    """
+    save('pos name',[3,3,3,3,3,3],'decription','joint',{'pin':21,'value':1,'delay':2})
+    """
     def save(self,name,position,description,space,gpio=None,speed=None):
         newId = self.getNewId()
         tempPos = {'id':newId,

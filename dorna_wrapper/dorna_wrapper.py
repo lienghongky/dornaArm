@@ -147,9 +147,9 @@ class Arm:
             if pin != None:
                 if type(pin) is str:
                     self.robot.set_io({pin:value})
-                else:
+                elif pin != -1:
                     GPIO.output(pin, {0:False,1:True}[value])
-                self.waitFor()
+                self.waitFor(gpio.get('delay',2))
                 return 'Set Io: '+str(pin)+' value: '+str(value)
         print(gpio)
         newSpeed = speed
@@ -177,9 +177,9 @@ class Arm:
                 if pin != None:
                     if type(pin) is str:
                         self.robot.set_io({pin:value})
-                    else:
+                    elif pin != -1:
                         GPIO.output(pin, {0:False,1:True}[value])
-                    self.waitFor()
+                    self.waitFor(gpio.get('delay',2))
                     print('Set Io: '+str(pin)+' value: '+str(value))
                     continue
             
@@ -256,12 +256,14 @@ class Arm:
     def showAllPositions(self):
         self.positionStore.showAllPositions()
         
-    def saveCurrentPosition(self,name,description,space="joint"):
+    def saveCurrentPosition(self,name,description,space,gpio=None,speed=None):
         currentPosition = json.loads(self.robot.position(space))
         self.positionStore.save(name,
                                 currentPosition,
                                 description,
-                                space)
+                                space,
+                                gpio,
+                                speed)
         
     def deletePosition(self,name):
         self.positionStore.delete(name)

@@ -1,10 +1,29 @@
 # Dorna Arm Robot Controll Application
+![Program](/sh.jpg)
+# SCREIPT
+##Run WEB GUI to controller Dorna Arm robot.
+```
+python main.py
+```
+##Initialize Dorna Arm robot and control robot by typing commands.
+```
+python demo.py
+```
+##Run GamePad control program to use xbox controllre to controler Dorna Arm robot.
+```
+python dornaGamepadControl.py
+```
+##Run Keyboard control program to control Dorna Arm robot with keyboard.
+```
+python dornaKeyboardControl.py
+```
+## Install LIBS
 
-## python3 main.py : Run WEB GUI to controller Dorna Arm robot.
-## python3 demo.py : Initialize Dorna Arm robot and control robot by typing commands.
-## python3 dornaGamepadControl.py : Run GamePad control program to use xbox controllre to controler Dorna Arm robot.
-## python3 dornaKeyboardControl.py : Run Keyboard control program to control Dorna Arm robot with keyboard.
-
+```
+pip install flask
+pip install tabulate
+pip install rich
+```
 #Structure
 
 ##dorna_custom_api: customized Dorna Original api
